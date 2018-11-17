@@ -31,6 +31,8 @@ dependencies {
     implementation "com.android.support:support-v4:$supportLibVersion"
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
+
+
     // implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     // implementation "com.android.support:recyclerview-v7:$supportLibVersion"
     // Kotlin 针对 JDK 7 或 JDK 8
@@ -66,3 +68,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 }
+//配置文件按照这里修改而成的
+//http://www.heqiangfly.com/2016/03/03/development-tool-gradle-command-config/
