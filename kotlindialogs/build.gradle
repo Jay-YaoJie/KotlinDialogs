@@ -1,27 +1,148 @@
-apply plugin: 'com.android.library'
+//声明引用 com.android.application 插件，那么这个模块就是一个Android应用程序
+apply plugin: 'com.android.application'
+/* Kotlin加入plugin声明
+   add the following line to the build.gradle (Module: app) file, as the second line,
+   followed by the com.android.application plugin:  */
+apply plugin: 'kotlin-android'
+//kotlin的apt 类似于java的apt
+apply plugin: 'kotlin-kapt'
+//扩展插件，使用可以直接引用布局里view的id进行操作
+apply plugin: 'kotlin-android-extensions'
 
+/* remove the below line
+   apply plugin: 'me.tatarka.retrolambda' */
+kapt {
+    //使用kotlin语言配置
+    generateStubs = true
+}
 android {
+    // 编译SDK的版本
     compileSdkVersion 28
-
-
-
+    // build tools的版本
+    //  buildToolsVersion "27.0.3"
+    //默认配置
     defaultConfig {
+        //应用的包名
+        applicationId "com.jeff.wwww"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        //  //分包
+        multiDexEnabled true
+        //Error:Removing unused resources requires unused code shrinking to be turned on. See http://d.android.com/r/tools/shrink-resources.html for more information.
+        // 添加如下配置就OK了
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true}}
+        //运行提示可能被抛弃
+//        jackOptions {
+//            enabled true
+//        }
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    //aapt配置
+    aaptOptions {
+        //防止检查9图时出现异常
+        cruncherEnabled = false
+        useNewCruncher = false
+        //不用压缩的文件
+        noCompress 'pak', 'dat', 'bin', 'notice'
+        //打包时候要忽略的文件
+        ignoreAssetsPattern "!.svn:!.git"
+        //分包
+//        multiDexEnabled true
+        //--extra-packages是为资源文件设置别名：意思是通过该应用包名+R，com.android.test1.R和com.android.test2.R都可以访问到资源
+        additionalParameters '--extra-packages', 'com.android.test1','--extra-packages','com.android.test2'
+    }
+    //编译配置
+    compileOptions {
+        // java版本
+      //  sourceCompatibility JavaVersion.VERSION_1_8
+       // targetCompatibility JavaVersion.VERSION_1_8
+    }
+    //源文件目录设置
+    //在android下添加这个一个sourceSets.main
+    sourceSets {
+        main {
+            //定义多个资源文件夹,这种情况下，两个资源文件夹具有相同优先级，即如果一个资源在两个文件夹都声明了，合并会报错。
+            // res.srcDirs = ['src/main/res', 'src/main/res2']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            jni.srcDirs = []
+            //jni lib的位置
+            //  jniLibs.srcDirs = jniLibs.srcDirs << 'src/jniLibs'
+            //   jniLibs.srcDirs = ['src/main/libs']
+            assets.srcDirs = ['assets']
+            //指定多个源文件目录
+            //  java.srcDirs = ['src/main/java', 'src/main/aidl']
+            java.srcDirs = ['src/main/java']
         }
     }
+//
+//    //签名配置
+//    signingConfigs {
+//        debug {
+//            keyAlias 'androiddebugkey'
+//            keyPassword 'android'
+//            storeFile file('keystore/debug.keystore')
+//            storePassword 'android'
+//        }
+//    }
 
+    buildTypes {
+
+        //release版本配置
+        release {
+            signingConfig signingConfigs.debug
+            // 是否进行混淆
+            minifyEnabled true
+            zipAlignEnabled true
+            debuggable false
+            //去除没有用到的资源文件，要求minifyEnabled为true才生效
+            //shrinkResources true
+            // 混淆文件的位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            //ndk的一些相关配置，也可以放到defaultConfig里面。
+            //指定要ndk需要兼容的架构(这样其他依赖包里mips,x86,arm-v8之类的so会被过滤掉)
+//            ndk {
+//                abiFilter "armeabi"
+//            }
+        }
+        //debug版本配置
+        debug {
+            signingConfig signingConfigs.debug
+            debuggable true
+            // 是否进行混淆
+            minifyEnabled false
+            buildConfigField "boolean", "ISDEBUG", "true"
+            //去除没有用到的资源文件，要求minifyEnabled为true才生效
+            //shrinkResources true
+            // 混淆文件的位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            //ndk的一些相关配置，也可以放到defaultConfig里面。
+            //指定要ndk需要兼容的架构(这样其他依赖包里mips,x86,arm-v8之类的so会被过滤掉)
+//            ndk {
+//                abiFilter "armeabi"
+//            }
+        }
+    }
+    // lint配置
+    lintOptions {
+        //移除lint检查的error
+        abortOnError false
+        //禁止掉某些lint检查
+        disable 'NewApi'
+    }
+    //Kotlin Android Extensions是另一个Kotlin团队研发的插件，让我们用更少的代码来开发程序 。
+    androidExtensions {
+        experimental = true
+    }
+    //具体是4g还是多少可以看电脑配置修改（2g、3g、6g、8g）
+//    dexOptions {
+//        javaMaxHeapSize "4g"
+//    }
 }
 //引用其他包或框架
 apply from : "../dependencies.gradle"
