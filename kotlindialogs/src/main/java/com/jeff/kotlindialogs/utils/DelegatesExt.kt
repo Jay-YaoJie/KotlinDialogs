@@ -1,7 +1,9 @@
-package com.jeff.kotlindialogs.constants
+package com.jeff.kotlindialogs.utils
 
 import android.content.Context
+import android.content.SharedPreferences
 import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 /**
  * author : Jeff  5899859876@qq.com

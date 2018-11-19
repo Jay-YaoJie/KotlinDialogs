@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.utils
+package com.jeff.kotlindialogs.constants
 
 import com.jeff.kotlindialogs.constants.DialogSettings.LOG_DEBUG
 import com.jeff.kotlindialogs.listener.DialogLifeCycleListener

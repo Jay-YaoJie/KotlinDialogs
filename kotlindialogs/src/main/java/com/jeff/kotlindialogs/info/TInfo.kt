@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.utils
+package com.jeff.kotlindialogs.info
 
 /**
  * author : Jeff  5899859876@qq.com
@@ -6,7 +6,7 @@ package com.jeff.kotlindialogs.utils
  * Created :  2018-11-17.
  * description ：
  */
-class TextInfo {
+ class TInfo {
 
     private var fontSize = -1      //字号大小，值为-1时使用默认样式，单位：dp
     private var gravity = -1       //对齐方式，值为-1时使用默认样式，取值可使用Gravity.CENTER等对齐方式
@@ -17,7 +17,7 @@ class TextInfo {
         return fontSize
     }
 
-    fun setFontSize(fontSize: Int): TextInfo {
+    fun setFontSize(fontSize: Int): TInfo {
         this.fontSize = fontSize
         return this
     }
@@ -26,7 +26,7 @@ class TextInfo {
         return gravity
     }
 
-    fun setGravity(gravity: Int): TextInfo {
+    fun setGravity(gravity: Int): TInfo {
         this.gravity = gravity
         return this
     }
@@ -35,7 +35,7 @@ class TextInfo {
         return fontColor
     }
 
-    fun setFontColor(fontColor: Int): TextInfo {
+    fun setFontColor(fontColor: Int): TInfo {
         this.fontColor = fontColor
         return this
     }
@@ -44,7 +44,7 @@ class TextInfo {
         return bold
     }
 
-    fun setBold(bold: Boolean): TextInfo {
+    fun setBold(bold: Boolean): TInfo {
         this.bold = bold
         return this
     }

@@ -1,7 +1,7 @@
 package com.jeff.kotlindialogs.constants
 
 import android.view.textservice.TextInfo
-import com.jeff.kotlindialogs.utils.BaseDialog
+import com.jeff.kotlindialogs.info.TInfo
 
 /**
  * author : Jeff  5899859876@qq.com
@@ -82,25 +82,25 @@ object DialogSettings {
      */
 
     //决定对话框标题文字样式
-    var dialogTitleTextInfo = com.jeff.kotlindialogs.utils.TextInfo()
+    var dialogTitleTextInfo = TInfo()
 
     //决定对话框内容文字样式
-    var dialogContentTextInfo = com.jeff.kotlindialogs.utils.TextInfo()
+    var dialogContentTextInfo = TInfo()
 
     //决定对话框按钮文字样式
-    var dialogButtonTextInfo = com.jeff.kotlindialogs.utils.TextInfo()
+    var dialogButtonTextInfo = TInfo()
 
     //决定对话框积极按钮（一般为确定按钮）文字样式，若未设置此样式则会使用 dialogButtonTextInfo 代替
     var dialogOkButtonTextInfo: TextInfo? = null
 
     //决定提示框文本样式
-    var tipTextInfo = com.jeff.kotlindialogs.utils.TextInfo()
+    var tipTextInfo = TInfo()
 
     //决定菜单文字样式
-    var menuTextInfo = com.jeff.kotlindialogs.utils.TextInfo()
+    var menuTextInfo = TInfo()
 
     //决定 Notification 默认文字样式信息
-    var notificationTextInfo = com.jeff.kotlindialogs.utils.TextInfo()
+    var notificationTextInfo = TInfo()
 
     //决定输入框输入文本字样大小（单位：dp），当值<=0时使用默认大小
     var dialog_input_text_size = 0

@@ -3,10 +3,8 @@ package com.jeff.kotlindialogs.utils
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import com.jeff.kotlindialogs.constants.DefaultValue
 import com.jeff.kotlindialogs.constants.DialogSettings
-import com.jeff.kotlindialogs.constants.FinalValue
-
+import java.io.File
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -25,7 +23,7 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
 
     // 使用object关键字替代class关键字就可以声明一个单例对象
     //object Variable {
-    val tag: String = "com.ftrd.flashlight.util.CrashHandler";
+    val tag: String = "..CrashHandler";
     var sInstance: CrashHandler = CrashHandler()
     /*
     * Kotlin会使用null来对每一个用lateinit修饰的属性做初始化，
@@ -63,9 +61,8 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
      * thread为出现未捕获异常的线程，ex为未捕获的异常，有了这个ex，我们就可以得到异常信息。
      */
     override fun uncaughtException(t: Thread, ex: Throwable) {
-        TODO("not implemented")
         //To change body of created functions use File | Settings | File Templates.
-        if (DefaultValue.CRASH_SAVESD){
+        if (DialogSettings.CRASH_SAVESD){
             try {
                 execu.submit({
                     //导出异常信息到SD卡中
@@ -121,7 +118,7 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
         val current = System.currentTimeMillis();
         val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date(current));
         //以当前时间创建log文件
-        val file = File(FinalValue.CRASH_FILE_PATH+time+FinalValue.CRASH_FILE_NAME);
+        val file = File(DialogSettings.CRASH_FILE_PATH+time+DialogSettings.CRASH_FILE_NAME);
         //写入到文件并保存数据
         FileUtils.writeText(file,sb.toString());
     }
