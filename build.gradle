@@ -25,7 +25,8 @@ buildscript {
 // followed by the com.android.application plugin:
 //        apply plugin: ‘kotlin-android’
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        //  classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+          classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

@@ -40,7 +40,7 @@ import java.util.*
     }
 
     fun getDialogLifeCycleListener(): DialogLifeCycleListener? {
-        return dialogLifeCycleListener
+        return dialogLifeCycleListener!!
     }
 
     fun cleanDialogLifeCycleListener() {
