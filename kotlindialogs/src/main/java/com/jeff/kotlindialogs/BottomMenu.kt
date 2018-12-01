@@ -13,7 +13,6 @@ import android.view.*
 import android.view.textservice.TextInfo
 import android.widget.*
 import com.jeff.kotlindialogs.constants.BaseDialog
-import com.jeff.kotlindialogs.constants.DialogSettings.LOG_DEBUG
 import com.jeff.kotlindialogs.constants.DialogSettings.TYPE_IOS
 import com.jeff.kotlindialogs.constants.DialogSettings.TYPE_KONGZUE
 import com.jeff.kotlindialogs.constants.DialogSettings.TYPE_MATERIAL
@@ -22,12 +21,17 @@ import com.jeff.kotlindialogs.constants.DialogSettings.dialogButtonTextInfo
 import com.jeff.kotlindialogs.constants.DialogSettings.menuTextInfo
 import com.jeff.kotlindialogs.constants.DialogSettings.type
 import com.jeff.kotlindialogs.constants.DialogSettings.use_blur
-import com.jeff.kotlindialogs.info.TInfo
 import com.jeff.kotlindialogs.listener.OnMenuItemClickListener
-import com.jeff.kotlindialogs.utils.LogUtils
 import com.jeff.kotlindialogs.widget.BlurView
-import kotlinx.android.synthetic.main.abc_activity_chooser_view_list_item.view.*
-import kotlinx.android.synthetic.main.bottom_menu_ios.view.*
+import android.view.WindowManager
+import android.view.ViewGroup
+import android.view.LayoutInflater
+import android.widget.TextView
+import android.widget.ArrayAdapter
+import android.widget.AdapterView
+import android.widget.RelativeLayout
+import android.widget.LinearLayout
+import android.view.Gravity
 
 
 /**
@@ -50,7 +54,6 @@ class BottomMenu : BaseDialog() {
 
     }
 
-
     private var bottomMenu: BottomMenu? = null
     private var menuText: List<String>? = null
     private var alertDialog: AlertDialog? = null
@@ -60,11 +63,108 @@ class BottomMenu : BaseDialog() {
     private var title: String? = null
     private var cancelButtonCaption = "取消"
 
-    private var customMenuTextInfo: TInfo? = null
-    private var customButtonTextInfo: TInfo? = null
+    private var customMenuTextInfo: TextInfo? = null
+    private var customButtonTextInfo: TextInfo? = null
+
+
+    //Fast Function
+    fun show(activity: AppCompatActivity, menuText: Array<String>): BottomMenu {
+        val list = ArrayList();
+        for (s in menuText) {
+            list.add(s)
+        }
+        return show(activity, list, null, true, "取消")
+    }
+
+    fun show(activity: AppCompatActivity, menuText: List<String>): BottomMenu {
+        return show(activity, menuText, null, true, "取消")
+    }
+
+    fun show(
+        activity: AppCompatActivity,
+        menuText: Array<String>,
+        onMenuItemClickListener: OnMenuItemClickListener
+    ): BottomMenu {
+        val list = ArrayList()
+        for (s in menuText) {
+            list.add(s)
+        }
+        return show(activity, list, onMenuItemClickListener, true, "取消")
+    }
+
+    fun show(
+        activity: AppCompatActivity,
+        menuText: List<String>,
+        onMenuItemClickListener: OnMenuItemClickListener
+    ): BottomMenu {
+        return show(activity, menuText, onMenuItemClickListener, true, "取消")
+    }
+
+    fun show(
+        activity: AppCompatActivity,
+        menuText: Array<String>,
+        onMenuItemClickListener: OnMenuItemClickListener,
+        isShowCancelButton: Boolean
+    ): BottomMenu {
+        val list = ArrayList()
+        for (s in menuText) {
+            list.add(s)
+        }
+        return show(activity, list, onMenuItemClickListener, isShowCancelButton, "取消")
+    }
+
+    fun show(
+        activity: AppCompatActivity,
+        menuText: List<String>,
+        onMenuItemClickListener: OnMenuItemClickListener,
+        isShowCancelButton: Boolean
+    ): BottomMenu {
+        return show(activity, menuText, onMenuItemClickListener, isShowCancelButton, "取消")
+    }
+
+    fun show(
+        activity: AppCompatActivity,
+        menuText: Array<String>,
+        onMenuItemClickListener: OnMenuItemClickListener,
+        isShowCancelButton: Boolean,
+        cancelButtonCaption: String
+    ): BottomMenu {
+        val list = ArrayList()
+        for (s in menuText) {
+            list.add(s)
+        }
+        return show(activity, list, onMenuItemClickListener, isShowCancelButton, cancelButtonCaption)
+    }
+
+    fun show(
+        activity: AppCompatActivity,
+        menuText: List<String>,
+        onMenuItemClickListener: OnMenuItemClickListener?,
+        isShowCancelButton: Boolean,
+        cancelButtonCaption: String
+    ): BottomMenu {
+        synchronized(BottomMenu::class.java) {
+            val bottomMenu = BottomMenu()
+            bottomMenu.cleanDialogLifeCycleListener()
+            bottomMenu.activity = activity
+            bottomMenu.menuText = menuText
+            bottomMenu.isShowCancelButton = isShowCancelButton
+            bottomMenu.onMenuItemClickListener = onMenuItemClickListener
+            bottomMenu.cancelButtonCaption = cancelButtonCaption
+            bottomMenu.title = ""
+            if (menuText.isEmpty()) {
+                bottomMenu.log("未启动底部菜单 -> 没有可显示的内容")
+                return bottomMenu
+            }
+            bottomMenu.log("装载底部菜单 -> " + menuText.toString())
+            bottomMenu.showDialog()
+            bottomMenu.bottomMenu = bottomMenu
+            return bottomMenu
+        }
+    }
 
     private var bottomSheetDialog: MyBottomSheetDialog? = null
-    private var menuArrayAdapter: ArrayAdapter? = null;
+    private var menuArrayAdapter: ArrayAdapter<*>? = null
 
     private var txtTitle: TextView? = null
     private var listMenu: ListView? = null
@@ -77,57 +177,63 @@ class BottomMenu : BaseDialog() {
     private var blurCancel: BlurView? = null
 
     private var boxList: RelativeLayout? = null
+
     override fun showDialog() {
-        LogUtils.d("启动底部菜单 ->", menuText.toString())
+        log("启动底部菜单 -> " + menuText!!.toString())
+        BaseDialog.dialogList.add(bottomMenu)
+
         if (customMenuTextInfo == null) {
             customMenuTextInfo = menuTextInfo
         }
         if (customButtonTextInfo == null) {
             customButtonTextInfo = dialogButtonTextInfo
         }
+
         if (type === TYPE_MATERIAL) {
             bottomSheetDialog = MyBottomSheetDialog(activity!!)
             val box_view = LayoutInflater.from(activity).inflate(R.layout.bottom_menu_material, null)
 
-            listMenu = box_view.list_menu
-            btnCancel = box_view.btn_cancel
-            txtTitle = box_view.findViewById<TextView>(R.id.title)
-            customView = box_view.findViewById<RelativeLayout>(R.id.box_custom)
+            listMenu = box_view.findViewById(R.id.list_menu)
+            btnCancel = box_view.findViewById(R.id.btn_cancel)
+            txtTitle = box_view.findViewById(R.id.title)
+            customView = box_view.findViewById(R.id.box_custom)
 
             if (customButtonTextInfo!!.getFontSize() > 0) {
-                btnCancel!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customButtonTextInfo!!.getFontSize().toFloat())
+                btnCancel!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customButtonTextInfo!!.getFontSize())
             }
             if (customButtonTextInfo!!.getGravity() !== -1) {
-                btnCancel!!.setGravity(customButtonTextInfo!!.getGravity())
+                btnCancel!!.gravity = customButtonTextInfo!!.getGravity()
             }
             if (customButtonTextInfo!!.getFontColor() !== -1) {
                 btnCancel!!.setTextColor(customButtonTextInfo!!.getFontColor())
             }
-            btnCancel!!.getPaint().setFakeBoldText(customButtonTextInfo!!.isBold())
-            btnCancel!!.setText(cancelButtonCaption)
+            btnCancel!!.paint.isFakeBoldText = customButtonTextInfo!!.isBold()
+            btnCancel!!.text = cancelButtonCaption
 
             if (title != null && !title!!.trim { it <= ' ' }.isEmpty()) {
-                txtTitle!!.setText(title)
-                txtTitle!!.setVisibility(View.VISIBLE)
+                txtTitle!!.text = title
+                txtTitle!!.visibility = View.VISIBLE
             } else {
-                txtTitle!!.setVisibility(View.GONE)
+                txtTitle!!.visibility = View.GONE
             }
 
-            menuArrayAdapter = NormalMenuArrayAdapter(activity!!, R.layout.item_bottom_menu_material, menuText!!)
-            listMenu!!.setAdapter(menuArrayAdapter)
+            menuArrayAdapter = NormalMenuArrayAdapter(activity, R.layout.item_bottom_menu_material, menuText)
+            listMenu!!.adapter = menuArrayAdapter
 
-            listMenu!!.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-                if (onMenuItemClickListener != null)
-                    onMenuItemClickListener!!.onClick(menuText!!.get(position), position)
-                bottomSheetDialog!!.dismiss()
-            })
+            listMenu!!.onItemClickListener = object : AdapterView.OnItemClickListener {
+                fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                    if (onMenuItemClickListener != null)
+                        onMenuItemClickListener!!.onClick(menuText!![position], position)
+                    bottomSheetDialog!!.dismiss()
+                }
+            }
 
-            bottomSheetDialog!!.getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            bottomSheetDialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             bottomSheetDialog!!.setContentView(box_view)
             bottomSheetDialog!!.setCancelable(true)
             bottomSheetDialog!!.setCanceledOnTouchOutside(true)
-            bottomSheetDialog!!.setOnDismissListener(DialogInterface.OnDismissListener {
-                dialogList!!.remove(bottomMenu)
+            bottomSheetDialog!!.setOnDismissListener {
+                BaseDialog.dialogList.remove(bottomMenu)
                 if (customView != null) customView!!.removeAllViews()
                 if (getDialogLifeCycleListener() != null)
                     getDialogLifeCycleListener()!!.onDismiss()
@@ -136,34 +242,33 @@ class BottomMenu : BaseDialog() {
                 try {
                     finalize()
                 } catch (throwable: Throwable) {
-                    if (LOG_DEBUG) throwable.printStackTrace()
+                    if (DEBUGMODE) throwable.printStackTrace()
                 }
-            })
+            }
             if (getDialogLifeCycleListener() != null)
-                getDialogLifeCycleListener().onCreate(bottomSheetDialog)
-            bottomSheetDialog.show()
+                getDialogLifeCycleListener()!!.onCreate(bottomSheetDialog!!)
+            bottomSheetDialog!!.show()
             if (getDialogLifeCycleListener() != null)
-                getDialogLifeCycleListener().onShow(bottomSheetDialog)
-
-        } else run {
+                getDialogLifeCycleListener()!!.onShow(bottomSheetDialog!!)
+        } else {
             val builder: AlertDialog.Builder
-            builder = AlertDialog.Builder(activity, R.style.bottom_menu)
+            builder = AlertDialog.Builder(activity!!, R.style.bottom_menu)
             builder.setCancelable(true)
             alertDialog = builder.create()
-            alertDialog.setCanceledOnTouchOutside(true)
+            alertDialog!!.setCanceledOnTouchOutside(true)
             if (getDialogLifeCycleListener() != null)
-                getDialogLifeCycleListener().onCreate(alertDialog)
-            alertDialog.setOnDismissListener(DialogInterface.OnDismissListener {
-                dialogList.remove(bottomMenu)
-                if (customView != null) customView.removeAllViews()
+                getDialogLifeCycleListener()!!.onCreate(alertDialog!!)
+            alertDialog!!.setOnDismissListener {
+                BaseDialog.dialogList.remove(bottomMenu)
+                if (customView != null) customView!!.removeAllViews()
                 if (getDialogLifeCycleListener() != null)
-                    getDialogLifeCycleListener().onDismiss()
+                    getDialogLifeCycleListener()!!.onDismiss()
                 isDialogShown = false
                 activity = null
-            })
-            alertDialog.show()
-            val window = alertDialog.getWindow()
-            val windowManager = activity.getWindowManager()
+            }
+            alertDialog!!.show()
+            val window = alertDialog!!.window
+            val windowManager = activity!!.windowManager
             val display = windowManager.defaultDisplay
             val lp = window!!.attributes
             lp.width = display.width
@@ -185,56 +290,56 @@ class BottomMenu : BaseDialog() {
             }
             window.setContentView(resId)
 
-            listMenu = window.findViewById<ListView>(R.id.list_menu)
-            btnCancel = window.findViewById<TextView>(R.id.btn_cancel)
-            txtTitle = window.findViewById<TextView>(R.id.title)
-            splitLine = window.findViewById<ImageView>(R.id.title_split_line)
-            customView = window.findViewById<RelativeLayout>(R.id.box_custom)
+            listMenu = window.findViewById(R.id.list_menu)
+            btnCancel = window.findViewById(R.id.btn_cancel)
+            txtTitle = window.findViewById(R.id.title)
+            splitLine = window.findViewById(R.id.title_split_line)
+            customView = window.findViewById(R.id.box_custom)
 
             if (title != null && !title!!.trim { it <= ' ' }.isEmpty()) {
-                txtTitle!!.setText(title)
-                txtTitle!!.setVisibility(View.VISIBLE)
-                splitLine!!.setVisibility(View.VISIBLE)
+                txtTitle!!.text = title
+                txtTitle!!.visibility = View.VISIBLE
+                splitLine!!.visibility = View.VISIBLE
             } else {
-                txtTitle!!.setVisibility(View.GONE)
-                splitLine!!.setVisibility(View.GONE)
+                txtTitle!!.visibility = View.GONE
+                splitLine!!.visibility = View.GONE
             }
 
             if (customButtonTextInfo!!.getFontSize() > 0) {
-                btnCancel!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customButtonTextInfo!!.getFontSize().toFloat())
+                btnCancel!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customButtonTextInfo!!.getFontSize())
             }
             if (customButtonTextInfo!!.getGravity() !== -1) {
-                btnCancel!!.setGravity(customButtonTextInfo!!.getGravity())
+                btnCancel!!.gravity = customButtonTextInfo!!.getGravity()
             }
             if (customButtonTextInfo!!.getFontColor() !== -1) {
                 btnCancel!!.setTextColor(customButtonTextInfo!!.getFontColor())
             }
-            btnCancel!!.getPaint().setFakeBoldText(customButtonTextInfo!!.isBold())
+            btnCancel!!.paint.isFakeBoldText = customButtonTextInfo!!.isBold()
 
-            btnCancel!!.setText(cancelButtonCaption)
+            btnCancel!!.text = cancelButtonCaption
 
             when (type) {
-                TYPE_KONGZUE -> boxCancel = window.findViewById<View>(R.id.box_cancel) as LinearLayout
+                TYPE_KONGZUE -> boxCancel = window.findViewById(R.id.box_cancel) as LinearLayout
                 TYPE_IOS -> {
-                    boxList = window.findViewById<RelativeLayout>(R.id.box_list)
-                    boxCancel = window.findViewById<View>(R.id.box_cancel) as RelativeLayout
+                    boxList = window.findViewById(R.id.box_list)
+                    boxCancel = window.findViewById(R.id.box_cancel) as RelativeLayout
                     if (use_blur) {
-                        boxList!!.post(Runnable {
+                        boxList!!.post {
                             blurList = BlurView(activity!!, null)
                             val params =
-                                RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxList!!.getHeight())
+                                RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxList!!.height)
                             blurList!!.setOverlayColor(Color.argb(blur_alpha, 255, 255, 255))
-                            blurList!!.setRadius(activity!!, 11.toFloat(), 11.toFloat())
+                            blurList!!.setRadius(activity!!, 11f, 11f)
                             boxList!!.addView(blurList, 0, params)
-                        })
-                        boxCancel!!.post(Runnable {
+                        }
+                        boxCancel!!.post {
                             blurCancel = BlurView(activity!!, null)
                             val params =
-                                RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxCancel!!.getHeight())
+                                RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, boxCancel!!.height)
                             blurCancel!!.setOverlayColor(Color.argb(blur_alpha, 255, 255, 255))
-                            blurCancel!!.setRadius(activity!!, 11.toFloat(), 11.toFloat())
+                            blurCancel!!.setRadius(activity!!, 11f, 11f)
                             boxCancel!!.addView(blurCancel, 0, params)
-                        })
+                        }
                     } else {
                         boxList!!.setBackgroundResource(R.drawable.rect_button_bottom_menu_ios)
                         boxCancel!!.setBackgroundResource(R.drawable.rect_button_bottom_menu_ios)
@@ -243,29 +348,35 @@ class BottomMenu : BaseDialog() {
             }
 
             if (isShowCancelButton) {
-                if (boxCancel != null) boxCancel!!.setVisibility(View.VISIBLE)
+                if (boxCancel != null) boxCancel!!.visibility = View.VISIBLE
             } else {
-                if (boxCancel != null) boxCancel!!.setVisibility(View.GONE)
+                if (boxCancel != null) boxCancel!!.visibility = View.GONE
             }
 
             when (type) {
                 TYPE_KONGZUE -> {
-                    menuArrayAdapter = NormalMenuArrayAdapter(activity!!, item_resId, menuText!!)
-                    listMenu!!.setAdapter(menuArrayAdapter)
+                    menuArrayAdapter = NormalMenuArrayAdapter(activity, item_resId, menuText)
+                    listMenu!!.adapter = menuArrayAdapter
                 }
                 TYPE_IOS -> {
-                    menuArrayAdapter = IOSMenuArrayAdapter(activity!!, item_resId, menuText!!)
-                    listMenu!!.setAdapter(menuArrayAdapter)
+                    menuArrayAdapter = IOSMenuArrayAdapter(activity, item_resId, menuText)
+                    listMenu!!.adapter = menuArrayAdapter
                 }
             }
 
-            listMenu!!.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-                if (onMenuItemClickListener != null)
-                    onMenuItemClickListener!!.onClick(menuText!!.get(position), position)
-                alertDialog!!.dismiss()
-            })
+            listMenu!!.onItemClickListener = object : AdapterView.OnItemClickListener {
+                fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                    if (onMenuItemClickListener != null)
+                        onMenuItemClickListener!!.onClick(menuText!![position], position)
+                    alertDialog!!.dismiss()
+                }
+            }
 
-            btnCancel!!.setOnClickListener(View.OnClickListener { alertDialog!!.dismiss() })
+            btnCancel!!.setOnClickListener(object : View.OnClickListener() {
+                fun onClick(v: View) {
+                    alertDialog!!.dismiss()
+                }
+            })
             if (getDialogLifeCycleListener() != null)
                 getDialogLifeCycleListener()!!.onShow(alertDialog!!)
         }
@@ -275,9 +386,8 @@ class BottomMenu : BaseDialog() {
         if (alertDialog != null) alertDialog!!.dismiss()
     }
 
-
-    class NormalMenuArrayAdapter(var context: Context, var resoureId: Int, var objects: List<String>) :
-        ArrayAdapter(context, resoureId, objects) {
+    internal inner class NormalMenuArrayAdapter(var context: Context, var resoureId: Int, var objects: List<String>) :
+        ArrayAdapter<*>(context, resoureId, objects) {
 
         inner class ViewHolder {
             internal var textView: TextView? = null
@@ -295,7 +405,7 @@ class BottomMenu : BaseDialog() {
             return position.toLong()
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             var convertView = convertView
             var viewHolder: ViewHolder? = null
             if (convertView == null) {
@@ -316,17 +426,17 @@ class BottomMenu : BaseDialog() {
                 if (customMenuTextInfo!!.getGravity() !== -1) {
                     viewHolder.textView!!.gravity = customMenuTextInfo!!.getGravity()
                 }
-                if (customMenuTextInfo.getFontColor() !== -1) {
-                    viewHolder.textView!!.setTextColor(customMenuTextInfo.getFontColor())
+                if (customMenuTextInfo!!.getFontColor() !== -1) {
+                    viewHolder.textView!!.setTextColor(customMenuTextInfo!!.getFontColor())
                 }
-                viewHolder.textView!!.paint.isFakeBoldText = customMenuTextInfo.isBold()
+                viewHolder.textView!!.paint.isFakeBoldText = customMenuTextInfo!!.isBold()
             }
 
             return convertView
         }
     }
 
-    class IOSMenuArrayAdapter(context: Context, resourceId: Int, objects: List<String>) :
+    internal inner class IOSMenuArrayAdapter(context: Context, resourceId: Int, objects: List<String>) :
         NormalMenuArrayAdapter(context, resourceId, objects) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -345,22 +455,22 @@ class BottomMenu : BaseDialog() {
             if (null != text) {
                 viewHolder.textView!!.setText(text)
 
-                if (customMenuTextInfo.getFontSize() > 0) {
-                    viewHolder.textView!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customMenuTextInfo.getFontSize())
+                if (customMenuTextInfo!!.getFontSize() > 0) {
+                    viewHolder.textView!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customMenuTextInfo!!.getFontSize())
                 }
-                if (customMenuTextInfo.getGravity() !== -1) {
-                    viewHolder.textView!!.gravity = customMenuTextInfo.getGravity()
+                if (customMenuTextInfo!!.getGravity() !== -1) {
+                    viewHolder.textView!!.gravity = customMenuTextInfo!!.getGravity()
                 }
-                if (customMenuTextInfo.getFontColor() !== -1) {
-                    viewHolder.textView!!.setTextColor(customMenuTextInfo.getFontColor())
+                if (customMenuTextInfo!!.getFontColor() !== -1) {
+                    viewHolder.textView!!.setTextColor(customMenuTextInfo!!.getFontColor())
                 }
-                viewHolder.textView!!.paint.isFakeBoldText = customMenuTextInfo.isBold()
+                viewHolder.textView!!.paint.isFakeBoldText = customMenuTextInfo!!.isBold()
 
                 if (objects.size == 1) {
-                    if (title != null && !title.trim { it <= ' ' }.isEmpty()) {
+                    if (title != null && !title!!.trim { it <= ' ' }.isEmpty()) {
                         viewHolder.textView!!.setBackgroundResource(R.drawable.button_menu_ios_bottom)
                     } else {
-                        if (customView.getVisibility() == View.VISIBLE) {
+                        if (customView!!.visibility == View.VISIBLE) {
                             viewHolder.textView!!.setBackgroundResource(R.drawable.button_menu_ios_all)
                         } else {
                             viewHolder.textView!!.setBackgroundResource(R.drawable.button_menu_ios_all)
@@ -368,10 +478,10 @@ class BottomMenu : BaseDialog() {
                     }
                 } else {
                     if (position == 0) {
-                        if (title != null && !title.trim { it <= ' ' }.isEmpty()) {
+                        if (title != null && !title!!.trim { it <= ' ' }.isEmpty()) {
                             viewHolder.textView!!.setBackgroundResource(R.drawable.button_menu_ios_middle)
                         } else {
-                            if (customView.getVisibility() == View.VISIBLE) {
+                            if (customView!!.visibility == View.VISIBLE) {
                                 viewHolder.textView!!.setBackgroundResource(R.drawable.button_menu_ios_middle)
                             } else {
                                 viewHolder.textView!!.setBackgroundResource(R.drawable.button_menu_ios_top)
@@ -389,8 +499,8 @@ class BottomMenu : BaseDialog() {
         }
     }
 
-    fun getTitle(): String {
-        return title!!
+    fun getTitle(): String? {
+        return title
     }
 
     fun setTitle(title: String?): BottomMenu {
@@ -398,23 +508,23 @@ class BottomMenu : BaseDialog() {
         when (type) {
             TYPE_MATERIAL -> if (bottomSheetDialog != null && txtTitle != null) {
                 if (title != null && !title.trim { it <= ' ' }.isEmpty()) {
-                    txtTitle!!.setText(title)
-                    txtTitle!!.setVisibility(View.VISIBLE)
+                    txtTitle!!.text = title
+                    txtTitle!!.visibility = View.VISIBLE
                 } else {
-                    txtTitle!!.setVisibility(View.GONE)
+                    txtTitle!!.visibility = View.GONE
                 }
             }
             else -> if (alertDialog != null && txtTitle != null) {
                 if (title != null && !title.trim { it <= ' ' }.isEmpty()) {
-                    txtTitle!!.setText(title)
-                    txtTitle!!.setVisibility(View.VISIBLE)
-                    splitLine!!.setVisibility(View.VISIBLE)
+                    txtTitle!!.text = title
+                    txtTitle!!.visibility = View.VISIBLE
+                    splitLine!!.visibility = View.VISIBLE
                 } else {
-                    txtTitle!!.setVisibility(View.GONE)
+                    txtTitle!!.visibility = View.GONE
                 }
             }
         }
-        if (menuArrayAdapter != null) menuArrayAdapter.notifyDataSetChanged()
+        if (menuArrayAdapter != null) menuArrayAdapter!!.notifyDataSetChanged()
         return this
     }
 
@@ -463,20 +573,20 @@ class BottomMenu : BaseDialog() {
 
     fun setCustomView(view: View?): BottomMenu {
         if (alertDialog != null && view != null) {
-            customView!!.setVisibility(View.VISIBLE)
-            splitLine!!.setVisibility(View.VISIBLE)
+            customView!!.visibility = View.VISIBLE
+            splitLine!!.visibility = View.VISIBLE
             customView!!.addView(view)
-            menuArrayAdapter.notifyDataSetChanged()
+            menuArrayAdapter!!.notifyDataSetChanged()
         }
         return this
     }
 
-    fun setMenuTextInfo(textInfo: TInfo): BottomMenu {
+    fun setMenuTextInfo(textInfo: TextInfo): BottomMenu {
         customMenuTextInfo = textInfo
         return this
     }
 
-    fun setButtonTextInfo(textInfo: TInfo): BottomMenu {
+    fun setButtonTextInfo(textInfo: TextInfo): BottomMenu {
         customButtonTextInfo = textInfo
         return this
     }
