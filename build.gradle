@@ -11,6 +11,8 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
+        //解决Android Studio配置完Kotlin下载慢的问题  加入下面这句
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
@@ -40,6 +42,8 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
+        //解决Android Studio配置完Kotlin下载慢的问题 加入下面这句
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
     }
 }
 

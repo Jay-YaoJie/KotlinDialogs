@@ -56,6 +56,9 @@ android {
     }
     //编译配置
     compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+
         // java版本
         //  sourceCompatibility JavaVersion.VERSION_1_8
         // targetCompatibility JavaVersion.VERSION_1_8

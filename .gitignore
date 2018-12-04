@@ -64,3 +64,6 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 .idea/
+kotlindialogs/src/main/java/com/jeff/kotlindialogs/TestKotlin.kt
+kotlindialogs/src/main/java/com/jeff/kotlindialogs/TestJava.java
+annotations/

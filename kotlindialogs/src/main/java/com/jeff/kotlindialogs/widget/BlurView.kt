@@ -270,9 +270,9 @@ class BlurView : View {
                 mBlurringCanvas!!.scale(1f * mBitmapToBlur!!.getWidth() / width, 1f * mBitmapToBlur!!.getHeight() / height)
                 mBlurringCanvas!!.translate((-x).toFloat(), (-y).toFloat())
                 if (decor.background != null) {
-                    decor.background.draw(mBlurringCanvas)
+                    decor.background.draw(mBlurringCanvas!!)
                 }
-                decor.draw(mBlurringCanvas)
+                decor.draw(mBlurringCanvas!!)
             } catch (e: StopException) {
             } finally {
                 mIsRendering = false

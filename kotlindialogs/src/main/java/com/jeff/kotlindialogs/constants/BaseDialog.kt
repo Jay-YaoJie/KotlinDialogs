@@ -10,7 +10,7 @@ import java.util.*
  * Created :  2018-11-17.
  * description ：baseDialog 全局Dialog   抽象类对象
  */
- abstract class BaseDialog {
+ open abstract class BaseDialog {
     companion object {
 
         var dialogList: List<BaseDialog> = ArrayList()         //对话框队列
