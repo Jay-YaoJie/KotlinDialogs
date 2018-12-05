@@ -96,8 +96,6 @@ object DialogSettings {
     //决定提示框文本样式
     var tipTextInfo = TInfo()
 
-    //决定菜单文字样式
-    var menuTextInfo = TInfo()
 
     //决定 Notification 默认文字样式信息
     var notificationTextInfo = TInfo()

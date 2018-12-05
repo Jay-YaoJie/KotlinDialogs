@@ -1,7 +1,16 @@
 package com.jeff.kotlindialogs.constants
 
+import android.content.Context
+import android.support.v7.app.AlertDialog
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import com.jeff.kotlindialogs.constants.DialogSettings.LOG_DEBUG
+import com.jeff.kotlindialogs.info.TInfo
 import com.jeff.kotlindialogs.listener.DialogLifeCycleListener
+import com.jeff.kotlindialogs.utils.LogUtils
+import com.jeff.kotlindialogs.widget.BlurView
 import java.util.*
 
 /**
@@ -10,8 +19,11 @@ import java.util.*
  * Created :  2018-11-17.
  * description ：baseDialog 全局Dialog   抽象类对象
  */
- open abstract class BaseDialog {
+open abstract class BaseDialog {
+
     companion object {
+        //保存实例化对象，以便后面使用
+        lateinit var dialogValue: BaseDialog;
 
         var dialogList: List<BaseDialog> = ArrayList()         //对话框队列
         fun unloadAllDialog() {
@@ -28,28 +40,110 @@ import java.util.*
     }
 
 
-    var isDialogShown: Boolean
+    internal var isDialogShown: Boolean
         get() = false
-        set(value) = TODO()
+        set(value) {
+            isDialogShown = value;
+        }
 
     private var dialogLifeCycleListener: DialogLifeCycleListener? = null
 
 
-    fun setDialogLifeCycleListener(listener: DialogLifeCycleListener) {
+    internal fun setDialogLifeCycleListener(listener: DialogLifeCycleListener) {
         dialogLifeCycleListener = listener
     }
 
-    fun getDialogLifeCycleListener(): DialogLifeCycleListener? {
+    internal fun getDialogLifeCycleListener(): DialogLifeCycleListener? {
         return dialogLifeCycleListener!!
     }
 
-    fun cleanDialogLifeCycleListener() {
+    internal fun cleanDialogLifeCycleListener() {
         dialogLifeCycleListener = null
     }
+    //在这里设置对话打印日志
 
-    abstract fun showDialog()
+    //在这里设置对话打印日志
+    //internal var tag: String = "DialogSDK>>>>"
+    internal fun mLog(msgString: String) {
+        LogUtils.d("DialogSDK>>>>", msgString)
+    }
 
-    abstract fun doDismiss()
+    //弹出对话框对象
+    internal var mAlertDialog: AlertDialog? = null
+    lateinit var mContext: Context//当前上下文对象
+
+    //保存信息对象，对话框弹出的值  val mList: List<Int> = listOf(1, 3, 5, 7, 9)
+    lateinit var valueListStr: ArrayList<String>
+
+    lateinit var title: String//标题
+    internal var cancelButton = "取消"//取消按钮
+
+    //决定对话框按钮文字样式
+    internal var dialogButtonTextInfo: TInfo
+        get() {
+            if (dialogButtonTextInfo == null) {
+                dialogButtonTextInfo = TInfo()
+            }
+            return dialogButtonTextInfo
+        }
+        set(value) {
+            dialogButtonTextInfo = value
+        }
+    //决定菜单文字样式
+    internal var menuTextInfo: TInfo
+        get() {
+            if (menuTextInfo == null) {
+                menuTextInfo = TInfo()
+            }
+            return menuTextInfo
+        }
+        set(value) {
+            menuTextInfo = value
+        }
+    //决定提示框文本样式
+    internal var tipTextInfo: TInfo
+        get() {
+            if (tipTextInfo == null) {
+                tipTextInfo = TInfo()
+            }
+            return tipTextInfo;
+        }
+        set(value) {
+            tipTextInfo = value
+        }
+    //决定对话框内容文字样式
+    internal var dialogContentTextInfo: TInfo
+        get() {
+            if (dialogContentTextInfo == null) {
+                dialogContentTextInfo = TInfo()
+            }
+            return dialogContentTextInfo
+        }
+        set(value) {
+            dialogContentTextInfo = value;
+        }
+
+
+    lateinit var blur: BlurView
+    lateinit var viewGroup: ViewGroup
+    lateinit var txtTitle: TextView//标题
+
+    lateinit var splitHorizontal: ImageView
+    lateinit var btnSelectNegative: TextView
+    lateinit var splitVertical: ImageView
+    lateinit var btnSelectPositive: TextView
+    lateinit var btnCancel: TextView //取消按钮
+    //自定义view对象
+    lateinit var mCustomView: RelativeLayout //自己定义的，要使用RelativeLayout做为首布局文件
+    internal open fun doShowDialog() {
+        mLog(valueListStr!!.toString())
+
+    }
+
+    internal fun doDismiss() {
+        mAlertDialog!!.dismiss()
+
+    }
 
 
 }

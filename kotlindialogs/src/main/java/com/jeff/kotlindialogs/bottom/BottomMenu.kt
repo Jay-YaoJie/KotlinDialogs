@@ -1,15 +1,23 @@
 package com.jeff.kotlindialogs.bottom
 
-import android.support.v7.app.AlertDialog
+import android.content.Context
+import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.textservice.TextInfo
-import android.widget.*
+import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ImageView
+import android.widget.ListView
+import android.widget.RelativeLayout
+import com.jeff.kotlindialogs.R
 import com.jeff.kotlindialogs.bottom.adapters.NormalMenuArrayAdapter
 import com.jeff.kotlindialogs.constants.BaseDialog
 import com.jeff.kotlindialogs.constants.DialogSettings.TYPE_MATERIAL
 import com.jeff.kotlindialogs.constants.DialogSettings.type
+import com.jeff.kotlindialogs.listener.OnMenuItemClickListener
 import com.jeff.kotlindialogs.widget.BlurView
+import org.jetbrains.anko.find
+import org.jetbrains.anko.textColor
 
 
 /**
@@ -27,44 +35,139 @@ BottomMenu.show(context, list);
 BottomMenu.show(context, list).setTitle("这里是标题测试");
  */
 class BottomMenu : BaseDialog() {
+
+
     companion object {
+
+
         //这里的方法全可以调用，都使用静态
+//        fun dip2px(context: Context, dpValue: Float): Int {
+//            val scale = context.resources.displayMetrics.density
+//            return (dpValue * scale + 0.5f).toInt()
+//        }
+        fun show(context: Context, menuText: ArrayList<String>): BottomMenu? {
+
+            return null;
+        }
+
+
+        @Synchronized
+        fun show(
+            context: Context,
+            menuText: ArrayList<String>,
+            onMenuItemClickListener: OnMenuItemClickListener,
+            isShowCancelButton: Boolean,
+            cancelButtonCaption: String
+        ): BottomMenu {
+            // Kotlin 语法 https://www.jianshu.com/p/1ea733ea197d
+            synchronized(BottomMenu::class.java) {
+                dialogValue = BottomMenu();
+                dialogValue.cleanDialogLifeCycleListener()
+                dialogValue.mContext = context;
+                dialogValue.valueListStr = menuText;
+                (dialogValue as BottomMenu).mOnMenuItemClickListener = onMenuItemClickListener;
+                dialogValue.isDialogShown = isShowCancelButton;
+                dialogValue.cancelButton = cancelButtonCaption
+                if (menuText == null || menuText.size < 1) {
+                    dialogValue.mLog("未启动底部菜单 -> 没有可显示的内容")
+                    return  (dialogValue as BottomMenu)
+                }
+                dialogValue.mLog("装载底部菜单 -> " + menuText.toString())
+                (dialogValue as BottomMenu).doShowDialog()
+
+            }
+            return  (dialogValue as BottomMenu);
+        }
+
 
     }
 
-    private var alertDialog: AlertDialog? = null
 
+    private lateinit var bottomSheetDialog: MyBottomSheetDialog
+    private lateinit var menuArrayAdapter: NormalMenuArrayAdapter
 
-    private var bottomSheetDialog: MyBottomSheetDialog? = null
-    private var menuArrayAdapter: NormalMenuArrayAdapter? = null
+    private lateinit var mOnMenuItemClickListener: OnMenuItemClickListener
 
-    private var txtTitle: TextView? = null
-    private var listMenu: ListView? = null
-    private var btnCancel: TextView? = null
-    private var boxCancel: ViewGroup? = null
+    private lateinit var listMenu: ListView
+
     private var splitLine: ImageView? = null
-    private var customView: RelativeLayout? = null;
 
-    private var blurList: BlurView? = null
     private var blurCancel: BlurView? = null
 
     private var boxList: RelativeLayout? = null
-    override fun showDialog() {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    //弹出对话框
+    override fun doShowDialog(){
+        super.doShowDialog()
+        dialogList+=  (dialogValue as BottomMenu)
+        if (type== TYPE_MATERIAL){
+            bottomSheetDialog= MyBottomSheetDialog(mContext)
+            val box_view=LayoutInflater.from(mContext).inflate(R.layout.bottom_menu_material,null)
+            listMenu=box_view.find(R.id.list_menu)
+            btnCancel = box_view.find(R.id.btn_cancel)
+            txtTitle = box_view.find(R.id.title)
+            mCustomView = box_view.find(R.id.box_custom)
+            if (dialogButtonTextInfo.fontSize>0){
+                btnCancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, dialogButtonTextInfo.fontSize.toFloat())
+
+            }
+            if (dialogButtonTextInfo.gravity!=-1){
+                btnCancel.setGravity(dialogButtonTextInfo.gravity)
+            }
+            if (dialogButtonTextInfo.fontColor!=-1){
+                btnCancel.textColor=dialogButtonTextInfo.fontColor
+            }
+            btnCancel.paint.isFakeBoldText=dialogButtonTextInfo.bold
+            btnCancel.text=cancelButton
+            if (title!=null&&title.trim().isEmpty()){
+                txtTitle.text = title
+                txtTitle.visibility = View.VISIBLE
+            }else{
+                txtTitle.visibility=View.GONE
+            }
+            //初始化适配器
+            menuArrayAdapter= NormalMenuArrayAdapter(mContext,R.layout.item_bottom_menu_material,valueListStr)
+            listMenu.adapter=menuArrayAdapter
+            listMenu.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                if (mOnMenuItemClickListener != null)
+                    mOnMenuItemClickListener.onClick(valueListStr[position], position)
+                bottomSheetDialog.dismiss()
+            }
+
+            bottomSheetDialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            bottomSheetDialog.setContentView(box_view)
+            bottomSheetDialog.setCancelable(true)
+            bottomSheetDialog.setCanceledOnTouchOutside(true)
+            bottomSheetDialog.setOnDismissListener { dialog ->
+                dialogList-= (dialogValue as BottomMenu)
+                mCustomView.removeAllViews()
+                if (getDialogLifeCycleListener()!=null){
+                    getDialogLifeCycleListener()!!.onDismiss()
+                }
+                isDialogShown=false
+            }
+           if (getDialogLifeCycleListener()!=null){
+               getDialogLifeCycleListener()!!.onCreate(bottomSheetDialog)
+               bottomSheetDialog.show()
+           }
+            if (getDialogLifeCycleListener() != null){
+                getDialogLifeCycleListener()!!.onShow(bottomSheetDialog)
+            }
+
+        }else{
+
+        }
+
+
+
     }
-
-
-    override fun doDismiss() {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        alertDialog!!.dismiss()
-    }
-
-    private var title: String? = null
-    fun getTitle(): String? {
-        return title
-    }
-
-    fun setTitle(title: String?): BottomMenu {
+    //private var title: String? = null
+//    fun getTitle(): String? {
+//
+//        return title
+//    }
+//
+    //设置标题
+    fun setTitle(title: String): BottomMenu {
         this.title = title
         when (type) {
             TYPE_MATERIAL -> if (bottomSheetDialog != null && txtTitle != null) {
@@ -75,7 +178,7 @@ class BottomMenu : BaseDialog() {
                     txtTitle!!.setVisibility(View.GONE)
                 }
             }
-            else -> if (alertDialog != null && txtTitle != null) {
+            else -> if (mAlertDialog != null && txtTitle != null) {
                 if (title != null && !title.trim { it <= ' ' }.isEmpty()) {
                     txtTitle!!.setText(title)
                     txtTitle!!.setVisibility(View.VISIBLE)
@@ -91,24 +194,16 @@ class BottomMenu : BaseDialog() {
 
 
     fun setCustomView(view: View?): BottomMenu {
-        if (alertDialog != null && view != null) {
-            customView!!.setVisibility(View.VISIBLE)
+        if (mAlertDialog != null && view != null) {
+            mCustomView!!.setVisibility(View.VISIBLE)
             splitLine!!.setVisibility(View.VISIBLE)
-            customView!!.addView(view)
+            mCustomView!!.addView(view)
             menuArrayAdapter!!.notifyDataSetChanged()
         }
         return this
     }
 
-    fun setMenuTextInfo(textInfo: TextInfo): BottomMenu {
-        customMenuTextInfo = textInfo
-        return this
-    }
 
-    fun setButtonTextInfo(textInfo: TextInfo): BottomMenu {
-        customButtonTextInfo = textInfo
-        return this
-    }
 
 
 }
