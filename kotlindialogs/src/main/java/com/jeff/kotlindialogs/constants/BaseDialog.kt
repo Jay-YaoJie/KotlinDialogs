@@ -46,20 +46,12 @@ open abstract class BaseDialog {
             isDialogShown = value;
         }
 
-    private var dialogLifeCycleListener: DialogLifeCycleListener? = null
+    internal var dialogLifeCycleListener: DialogLifeCycleListener?
+        get() = dialogLifeCycleListener
+        set(value) {
+            dialogLifeCycleListener = value
+        }
 
-
-    internal fun setDialogLifeCycleListener(listener: DialogLifeCycleListener) {
-        dialogLifeCycleListener = listener
-    }
-
-    internal fun getDialogLifeCycleListener(): DialogLifeCycleListener? {
-        return dialogLifeCycleListener!!
-    }
-
-    internal fun cleanDialogLifeCycleListener() {
-        dialogLifeCycleListener = null
-    }
     //在这里设置对话打印日志
 
     //在这里设置对话打印日志
@@ -69,7 +61,8 @@ open abstract class BaseDialog {
     }
 
     //弹出对话框对象
-    internal var mAlertDialog: AlertDialog? = null
+    lateinit var mAlertDialog: AlertDialog
+    lateinit var mBilder: AlertDialog.Builder
     lateinit var mContext: Context//当前上下文对象
 
     //保存信息对象，对话框弹出的值  val mList: List<Int> = listOf(1, 3, 5, 7, 9)
@@ -135,6 +128,7 @@ open abstract class BaseDialog {
     lateinit var btnCancel: TextView //取消按钮
     //自定义view对象
     lateinit var mCustomView: RelativeLayout //自己定义的，要使用RelativeLayout做为首布局文件
+
     internal open fun doShowDialog() {
         mLog(valueListStr!!.toString())
 

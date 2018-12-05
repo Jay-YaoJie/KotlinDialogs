@@ -1,6 +1,7 @@
 package com.jeff.kotlindialogs.bottom
 
 import android.content.Context
+import android.support.v7.app.AlertDialog
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -62,7 +63,7 @@ class BottomMenu : BaseDialog() {
             // Kotlin 语法 https://www.jianshu.com/p/1ea733ea197d
             synchronized(BottomMenu::class.java) {
                 dialogValue = BottomMenu();
-                dialogValue.cleanDialogLifeCycleListener()
+                dialogValue.dialogLifeCycleListener=null
                 dialogValue.mContext = context;
                 dialogValue.valueListStr = menuText;
                 (dialogValue as BottomMenu).mOnMenuItemClickListener = onMenuItemClickListener;
@@ -140,20 +141,32 @@ class BottomMenu : BaseDialog() {
             bottomSheetDialog.setOnDismissListener { dialog ->
                 dialogList-= (dialogValue as BottomMenu)
                 mCustomView.removeAllViews()
-                if (getDialogLifeCycleListener()!=null){
-                    getDialogLifeCycleListener()!!.onDismiss()
+                if (dialogLifeCycleListener!=null){
+                    dialogLifeCycleListener!!.onDismiss()
                 }
                 isDialogShown=false
             }
-           if (getDialogLifeCycleListener()!=null){
-               getDialogLifeCycleListener()!!.onCreate(bottomSheetDialog)
+           if (dialogLifeCycleListener!=null){
+               dialogLifeCycleListener!!.onCreate(bottomSheetDialog)
                bottomSheetDialog.show()
            }
-            if (getDialogLifeCycleListener() != null){
-                getDialogLifeCycleListener()!!.onShow(bottomSheetDialog)
+            if (dialogLifeCycleListener!= null){
+                dialogLifeCycleListener!!.onShow(bottomSheetDialog)
             }
 
         }else{
+            mBilder=AlertDialog.Builder( mContext,R.style.bottom_menu)
+            mBilder!!.setCancelable(true)
+            mAlertDialog=mBilder.create()
+            mAlertDialog.setCanceledOnTouchOutside(true)
+            if (dialogLifeCycleListener!= null){
+                dialogLifeCycleListener!!.onCreate(mAlertDialog)
+            }
+
+            mAlertDialog.setOnDismissListener {
+                dialogList.lastIndexOf((dialogValue as BottomMenu))
+            }
+
 
         }
 
