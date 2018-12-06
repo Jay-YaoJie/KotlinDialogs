@@ -129,7 +129,10 @@ class BottomMenu : BaseDialog() {
             //初始化适配器
             menuArrayAdapter = NormalMenuArrayAdapter(mContext, R.layout.item_bottom_menu_material, valueListStr)
             listMenu.adapter = menuArrayAdapter
-            // parent, view,  id   参数从未使用过，可以改名为  _
+            // parent, view,  id   参数从未使用过，可以改名为  _  或着在Gradle中 添加retrolambda {
+            //    jvmArgs '-noverify'
+            //}
+            //https://github.com/evant/gradle-retrolambda/issues/105
             listMenu.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 mOnMenuItemClickListener.onClick(valueListStr[position], position)
                 bottomSheetDialog.dismiss()
