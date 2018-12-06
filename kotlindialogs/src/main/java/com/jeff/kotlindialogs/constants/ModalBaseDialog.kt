@@ -14,6 +14,6 @@ abstract class ModalBaseDialog: BaseDialog() {
 
     protected fun showNextModalDialog() {
         LogUtils.i("ModalBaseDialog", "showNextModalDialog: " + modalDialogList.size)
-        modalDialogList[0].showDialog()
+        modalDialogList[0].doShowDialog()
     }
 }
