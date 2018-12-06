@@ -1,1 +1,1 @@
-include ':app', ':kotlindialogs'
+include ':app', ':kotlindialog'

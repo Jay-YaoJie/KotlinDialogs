@@ -1,5 +1,4 @@
-//声明引用 com.android.application 插件，那么这个模块就是一个Android应用程序
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 /* Kotlin加入plugin声明
    add the following line to the build.gradle (Module: app) file, as the second line,
    followed by the com.android.application plugin:  */
@@ -11,35 +10,37 @@ apply plugin: 'kotlin-android-extensions'
 
 /* remove the below line
    apply plugin: 'me.tatarka.retrolambda' */
-kapt {
-    //使用kotlin语言配置
-    generateStubs = true
-}
+//kapt {
+//    //使用kotlin语言配置
+//    generateStubs = true
+//}
+
 android {
-    // 编译SDK的版本
     compileSdkVersion 28
-    // build tools的版本
-    //  buildToolsVersion "27.0.3"
-    //默认配置
     defaultConfig {
         //应用的包名
-        applicationId "com.jeff.kotlindialogs"
+        //applicationId "com.jeff.kotlindialog"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         //  //分包
         multiDexEnabled true
         //Error:Removing unused resources requires unused code shrinking to be turned on. See http://d.android.com/r/tools/shrink-resources.html for more information.
         // 添加如下配置就OK了
-        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true}}
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
         //运行提示可能被抛弃
 //        jackOptions {
 //            enabled true
 //        }
-    }
+        //        Caused by: java.lang.RuntimeException:
+//        错误！
+//        RenderScript支持库未启用，要启用模糊效果，请在您的app的Gradle配置文件中添加以下语句：
+        renderscriptTargetApi 19
+        renderscriptSupportModeEnabled true
 
+    }
     //aapt配置
     aaptOptions {
         //防止检查9图时出现异常
@@ -52,49 +53,20 @@ android {
         //分包
 //        multiDexEnabled true
         //--extra-packages是为资源文件设置别名：意思是通过该应用包名+R，com.android.test1.R和com.android.test2.R都可以访问到资源
-        additionalParameters '--extra-packages', 'com.android.test1','--extra-packages','com.android.test2'
+        additionalParameters '--extra-packages', 'com.android.test1', '--extra-packages', 'com.android.test2'
     }
     //编译配置
     compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+
         // java版本
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        //  sourceCompatibility JavaVersion.VERSION_1_8
+        // targetCompatibility JavaVersion.VERSION_1_8
     }
-    //源文件目录设置
-    //在android下添加这个一个sourceSets.main
-    sourceSets {
-        main {
-            //定义多个资源文件夹,这种情况下，两个资源文件夹具有相同优先级，即如果一个资源在两个文件夹都声明了，合并会报错。
-            // res.srcDirs = ['src/main/res', 'src/main/res2']
-            res.srcDirs = ['src/main/res']
-            assets.srcDirs = ['src/main/assets']
-            manifest.srcFile 'src/main/AndroidManifest.xml'
-            jni.srcDirs = []
-            //jni lib的位置
-            //  jniLibs.srcDirs = jniLibs.srcDirs << 'src/jniLibs'
-            //   jniLibs.srcDirs = ['src/main/libs']
-            assets.srcDirs = ['assets']
-            //指定多个源文件目录
-            //  java.srcDirs = ['src/main/java', 'src/main/aidl']
-            java.srcDirs = ['src/main/java']
-        }
-    }
-//
-//    //签名配置
-//    signingConfigs {
-//        debug {
-//            keyAlias 'androiddebugkey'
-//            keyPassword 'android'
-//            storeFile file('keystore/debug.keystore')
-//            storePassword 'android'
-//        }
-//    }
-
     buildTypes {
-
-        //release版本配置
         release {
-            signingConfig signingConfigs.debug
+            //  signingConfig signingConfigs.debug
             // 是否进行混淆
             minifyEnabled true
             zipAlignEnabled true
@@ -102,8 +74,7 @@ android {
             //去除没有用到的资源文件，要求minifyEnabled为true才生效
             //shrinkResources true
             // 混淆文件的位置
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             //ndk的一些相关配置，也可以放到defaultConfig里面。
             //指定要ndk需要兼容的架构(这样其他依赖包里mips,x86,arm-v8之类的so会被过滤掉)
 //            ndk {
@@ -112,7 +83,7 @@ android {
         }
         //debug版本配置
         debug {
-            signingConfig signingConfigs.debug
+            // signingConfig signingConfigs.debug
             debuggable true
             // 是否进行混淆
             minifyEnabled false
@@ -128,6 +99,7 @@ android {
 //            }
         }
     }
+
     // lint配置
     lintOptions {
         //移除lint检查的error
@@ -143,14 +115,13 @@ android {
 //    dexOptions {
 //        javaMaxHeapSize "4g"
 //    }
+
 }
 //引用其他包或框架
-apply from : "../kotlindialog/dependencies.gradle"
+apply from: "dependencies.gradle"
+
 dependencies {
-    //默认加载包
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation project(':kotlindialog')
 }
