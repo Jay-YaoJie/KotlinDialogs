@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.jeff.kotlindialog.R
 import com.jeff.kotlindialogs.info.TInfo
-import java.util.*
 
 /**
  * author : Jeff  5899859876@qq.com
@@ -18,15 +17,15 @@ import java.util.*
  * description ：灰黑色的适配器 NormalMenuArrayAdapter
  * https://stackoverflow.com/questions/41923557/arrayadapter-use-kotlin-android
  */
-open class NormalMenuArrayAdapter(context: Context, resource: Int, list: ArrayList<String>) : ArrayAdapter<String>(context, resource, list) {
+open class NormalMenuArrayAdapter(context: Context, resource: Int, list: List<String>,customMenuTextInfo: TInfo) : ArrayAdapter<String>(context, resource, list) {
     var resource: Int
-    var list: ArrayList<String>
+    var list: List<String>
 
-    var customMenuTextInfo: TInfo? = null
-
+     var customMenuTextInfo: TInfo
     init {
         this.resource = resource;
-        this.list = list;
+        this.list = list
+        this.customMenuTextInfo=customMenuTextInfo
     }
 
     class ViewHolder {
@@ -59,16 +58,16 @@ open class NormalMenuArrayAdapter(context: Context, resource: Int, list: ArrayLi
         val text: String = list[position];
 
         holder.textView!!.text = text;
-        if (customMenuTextInfo!!.fontSize > 0) {
-            holder.textView!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customMenuTextInfo!!.fontSize.toFloat())
+        if (customMenuTextInfo.fontSize > 0) {
+            holder.textView!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customMenuTextInfo.fontSize.toFloat())
         }
-        if (customMenuTextInfo!!.gravity != -1) {
-            holder.textView!!.setGravity(customMenuTextInfo!!.gravity)
+        if (customMenuTextInfo.gravity != -1) {
+            holder.textView!!.setGravity(customMenuTextInfo.gravity)
         }
-        if (customMenuTextInfo!!.fontColor != -1) {
-            holder.textView!!.setTextColor(customMenuTextInfo!!.fontColor)
+        if (customMenuTextInfo.fontColor != -1) {
+            holder.textView!!.setTextColor(customMenuTextInfo.fontColor)
         }
-        holder.textView!!.getPaint().setFakeBoldText(customMenuTextInfo!!.bold)
+        holder.textView!!.getPaint().setFakeBoldText(customMenuTextInfo.bold)
 
 
         return view

@@ -3,6 +3,7 @@ package com.jeff.kotlindialogs.bottom
 import android.content.Context
 import android.graphics.Color
 import android.support.v7.app.AlertDialog
+import android.util.Half.toFloat
 import android.util.TypedValue
 import android.view.*
 import android.widget.LinearLayout
@@ -18,7 +19,8 @@ import com.jeff.kotlindialogs.constants.DialogSettings.TYPE_MATERIAL
 import com.jeff.kotlindialogs.constants.DialogSettings.blur_alpha
 import com.jeff.kotlindialogs.constants.DialogSettings.type
 import com.jeff.kotlindialogs.constants.DialogSettings.use_blur
-import com.jeff.kotlindialogs.listener.OnMenuItemClickListener
+import com.jeff.kotlindialogs.listener.DialogLifeCycleL
+import com.jeff.kotlindialogs.listener.OnMenuItemClickL
 import com.jeff.kotlindialogs.utils.unitWH
 import com.jeff.kotlindialogs.widget.BlurView
 import org.jetbrains.anko.backgroundResource
@@ -49,18 +51,25 @@ class BottomMenu : BaseDialog() {
 
         //这里的方法全可以调用，都使用静态
 
-        fun show(context: Context, menuText: ArrayList<String>): BottomMenu? {
+        fun show(context: Context, menuText: List<String>): BottomMenu? {
             return show(context, menuText, null);
         }
 
-        fun show(context: Context, menuText: ArrayList<String>,onMenuItemClickListener :OnMenuItemClickListener?): BottomMenu? {
-            return show(context, menuText, onMenuItemClickListener, true, "取消");
+        fun show(context: Context, menuText: List<String>,onMenuItemClickListener : OnMenuItemClickL?): BottomMenu? {
+            return show(context, menuText, onMenuItemClickListener, true, "取消",null);
+        }
+        fun show(context: Context, menuText: List<String>,onMenuItemClickListener :OnMenuItemClickL?,dialogLifeCycleL: DialogLifeCycleL?): BottomMenu? {
+            return show(context, menuText, onMenuItemClickListener, true, "取消",dialogLifeCycleL );
         }
 
-
-        fun show(context: Context, menuText: ArrayList<String>,onMenuItemClickListener :OnMenuItemClickListener?,isShowCancelButton:Boolean): BottomMenu? {
-            return show(context, menuText, onMenuItemClickListener, isShowCancelButton, "取消");
+        fun show(context: Context, menuText: List<String>,onMenuItemClickListener :OnMenuItemClickL?,isShowCancelButton:Boolean): BottomMenu? {
+            return show(context, menuText, onMenuItemClickListener, isShowCancelButton, "取消",null );
         }
+
+        fun show(context: Context, menuText: List<String>,onMenuItemClickListener :OnMenuItemClickL?,isShowCancelButton:Boolean,dialogLifeCycleL: DialogLifeCycleL?): BottomMenu? {
+            return show(context, menuText, onMenuItemClickListener, isShowCancelButton, "取消",dialogLifeCycleL );
+        }
+
 
 
 
@@ -69,20 +78,24 @@ class BottomMenu : BaseDialog() {
         @Synchronized
         fun show(
             context: Context,
-            menuText: ArrayList<String>,
-            onMenuItemClickListener: OnMenuItemClickListener?,
+            menuText: List<String>,
+            onMenuItemClickListener: OnMenuItemClickL?,
             isShowCancelButton: Boolean,
-            cancelButtonCaption: String
+            cancelButtonCaption: String,
+            dialogLifeCycleL: DialogLifeCycleL?
         ): BottomMenu {
             // Kotlin 语法 https://www.jianshu.com/p/1ea733ea197d
             synchronized(BottomMenu::class.java) {
                 dialogValue = BottomMenu();
-                dialogValue.dialogLifeCycleListener = null
                 dialogValue.mContext = context;
                 dialogValue.valueListStr = menuText;
                 (dialogValue as BottomMenu).mOnMenuItemClickListener = onMenuItemClickListener;
                 dialogValue.isDialogShown = isShowCancelButton;
                 dialogValue.cancelButton = cancelButtonCaption
+                if (dialogLifeCycleL!=null){
+                    dialogValue.dialogLifeCycleL=dialogLifeCycleL//添加监听生命周期
+                }
+
                 if (menuText.isEmpty() || menuText.size < 1) {
                     dialogValue.mLog("未启动底部菜单 -> 没有可显示的内容")
                     return (dialogValue as BottomMenu)
@@ -99,7 +112,7 @@ class BottomMenu : BaseDialog() {
 
     private lateinit var bottomSheetDialog: MyBottomSheetDialog
     private lateinit var menuArrayAdapter: NormalMenuArrayAdapter
-    private  var mOnMenuItemClickListener: OnMenuItemClickListener?=null
+    private  var mOnMenuItemClickListener: OnMenuItemClickL?=null
     private lateinit var listMenu: ListView
 
     //弹出对话框
@@ -133,7 +146,7 @@ class BottomMenu : BaseDialog() {
                 txtTitle.visibility = View.GONE
             }
             //初始化适配器
-            menuArrayAdapter = NormalMenuArrayAdapter(mContext, R.layout.item_bottom_menu_material, valueListStr)
+            menuArrayAdapter = NormalMenuArrayAdapter(mContext, R.layout.item_bottom_menu_material, valueListStr,menuTextInfo)
             listMenu.adapter = menuArrayAdapter
             // parent, view,  id   参数从未使用过，可以改名为  _  或着在Gradle中 添加retrolambda {
             //    jvmArgs '-noverify'
@@ -152,34 +165,36 @@ class BottomMenu : BaseDialog() {
                 dialogList -= (dialogValue as BottomMenu)
                 cCustomView!!.removeAllViews()
 
-                dialogLifeCycleListener!!.onDismiss()
+                dialogLifeCycleL!!.onDismiss()
 
                 isDialogShown = false
             }
-            if (dialogLifeCycleListener != null) {
-                dialogLifeCycleListener!!.onCreate(bottomSheetDialog)
+            if (dialogLifeCycleL != null) {
+                dialogLifeCycleL!!.onCreate(bottomSheetDialog)
                 bottomSheetDialog.show()
             }
-
-            dialogLifeCycleListener!!.onShow(bottomSheetDialog)
-
+            dialogLifeCycleL?.onShow(bottomSheetDialog)
 
         } else {
             mBilder = AlertDialog.Builder(mContext, R.style.bottom_menu)
             mBilder.setCancelable(true)
             mAlertDialog = mBilder.create()
-            mAlertDialog.setCanceledOnTouchOutside(true)
-            dialogLifeCycleListener!!.onCreate(mAlertDialog)
-            mAlertDialog.setOnDismissListener {
+            if (mAlertDialog==null){
+                mLog("当前 AlertDialog 对象为空")
+              return;
+            }
+            mAlertDialog!!.setCanceledOnTouchOutside(true)
+            dialogLifeCycleL!!.onCreate(mAlertDialog!!)
+            mAlertDialog!!.setOnDismissListener {
                 //https://blog.csdn.net/Jeff_YaoJie/article/details/84847262
                 dialogList -= dialogValue //remove
                 //  dialogList.remove(dialogValue)
                 cCustomView!!.removeAllViews()
-                dialogLifeCycleListener!!.onDismiss()
+                dialogLifeCycleL!!.onDismiss()
                 isDialogShown = false
             }
-            mAlertDialog.show()
-            mWindow = mAlertDialog.window!!
+            mAlertDialog!!.show()
+            mWindow = mAlertDialog!!.window!!
             mWindow.setGravity(Gravity.BOTTOM)
             /*  WindowManager windowManager = activity.getWindowManager();
             Display display = windowManager.getDefaultDisplay();
@@ -214,7 +229,7 @@ class BottomMenu : BaseDialog() {
                 imgTitle.visibility = View.VISIBLE
             }
             if (dialogButtonTextInfo.fontSize > 0) {
-                btnCancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, dialogButtonTextInfo.getFontSize().toFloat())
+                btnCancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, dialogButtonTextInfo.fontSize.toFloat())
             }
             if (dialogButtonTextInfo.gravity != -1) {
                 btnCancel.gravity = dialogButtonTextInfo.gravity
@@ -264,11 +279,11 @@ class BottomMenu : BaseDialog() {
             }
             when (type) {
                 TYPE_KONGZUE -> {
-                    menuArrayAdapter = NormalMenuArrayAdapter(mContext, item_resId, valueListStr)
+                    menuArrayAdapter = NormalMenuArrayAdapter(mContext, item_resId, valueListStr,menuTextInfo)
                     listMenu.adapter = menuArrayAdapter
                 }
                 TYPE_IOS -> {
-                    menuArrayAdapter = IOSMenuArrayAdapter(mContext, item_resId, valueListStr)
+                    menuArrayAdapter = IOSMenuArrayAdapter(mContext, item_resId, valueListStr,menuTextInfo)
                     listMenu.adapter = menuArrayAdapter
                 }
             }
@@ -278,12 +293,12 @@ class BottomMenu : BaseDialog() {
             //https://github.com/evant/gradle-retrolambda/issues/105
             listMenu.onItemClick { _, _, position, _ ->
                 mOnMenuItemClickListener!!.onClick(valueListStr[position], position)
-                mAlertDialog.dismiss()
+                mAlertDialog!!.dismiss()
             }
             btnCancel.onClick {
-                mAlertDialog.dismiss()
+                mAlertDialog!!.dismiss()
             }
-            dialogLifeCycleListener!!.onShow(mAlertDialog)
+            dialogLifeCycleL!!.onShow(mAlertDialog!!)
 
         }
     }

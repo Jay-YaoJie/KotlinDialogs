@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jeff.kotlindialog.R
+import com.jeff.kotlindialogs.info.TInfo
 import java.util.*
 
 
@@ -17,8 +18,8 @@ import java.util.*
  *
  * https://stackoverflow.com/questions/41923557/arrayadapter-use-kotlin-android
  */
-class IOSMenuArrayAdapter(context: Context, resource: Int, list: ArrayList<String>) :
-    NormalMenuArrayAdapter(context, resource, list) {
+class IOSMenuArrayAdapter(context: Context, resource: Int, list: List<String>,customMenuTextInfo: TInfo) :
+    NormalMenuArrayAdapter(context, resource, list,customMenuTextInfo) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         var holder:ViewHolder?=null;
         var view:View?=convertView;
@@ -31,16 +32,16 @@ class IOSMenuArrayAdapter(context: Context, resource: Int, list: ArrayList<Strin
         val textStr=list[position]
 
              holder!!.textView!!.text=textStr
-            if (customMenuTextInfo!!.fontSize>0){
-                holder.textView!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customMenuTextInfo!!.fontSize.toFloat())
+            if (customMenuTextInfo.fontSize>0){
+                holder.textView!!.setTextSize(TypedValue.COMPLEX_UNIT_DIP, customMenuTextInfo.fontSize.toFloat())
             }
-            if (customMenuTextInfo!!.gravity != -1) {
-                holder.textView!!.setGravity(customMenuTextInfo!!.gravity)
+            if (customMenuTextInfo.gravity != -1) {
+                holder.textView!!.setGravity(customMenuTextInfo.gravity)
             }
-            if (customMenuTextInfo!!.fontColor != -1) {
-                holder.textView!!.setTextColor(customMenuTextInfo!!.fontColor)
+            if (customMenuTextInfo.fontColor != -1) {
+                holder.textView!!.setTextColor(customMenuTextInfo.fontColor)
             }
-            holder.textView!!.getPaint().setFakeBoldText(customMenuTextInfo!!.bold)
+            holder.textView!!.getPaint().setFakeBoldText(customMenuTextInfo.bold)
 
             if (list.size == 1) {
                 if (!textStr.trim().isEmpty()) {

@@ -1,5 +1,6 @@
 package com.jeff.kotlindialogs.widget
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.*
@@ -14,6 +15,8 @@ import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
 import com.jeff.kotlindialog.R
+import com.jeff.kotlindialogs.utils.LogUtils
+import org.jetbrains.anko.backgroundDrawable
 
 
 /**
@@ -136,22 +139,22 @@ class ProgressView : View {
 
 
     class CircularProgressDrawable private constructor(
-        private val mPadding: Int,
-        private val mInitialAngle: Float,
-        private val mMaxSweepAngle: Float,
-        private val mMinSweepAngle: Float,
-        private var mStrokeSize: Int,
-        private var mStrokeColors: IntArray?,
-        private val mReverse: Boolean,
-        private val mRotateDuration: Int,
-        private val mTransformDuration: Int,
-        private val mKeepDuration: Int,
-        private val mTransformInterpolator: Interpolator,
-        private val mProgressMode: Int,
-        private val mInAnimationDuration: Int,
-        private val mInStepPercent: Float,
-        private val mInColors: IntArray,
-        private val mOutAnimationDuration: Int
+            private val mPadding: Int,
+            private val mInitialAngle: Float,
+            private val mMaxSweepAngle: Float,
+            private val mMinSweepAngle: Float,
+            private var mStrokeSize: Int,
+            private var mStrokeColors: IntArray?,
+            private val mReverse: Boolean,
+            private val mRotateDuration: Int,
+            private val mTransformDuration: Int,
+            private val mKeepDuration: Int,
+            private val mTransformInterpolator: Interpolator,
+            private val mProgressMode: Int,
+            private val mInAnimationDuration: Int,
+            private val mInStepPercent: Float,
+            private val mInColors: IntArray,
+            private val mOutAnimationDuration: Int
     ) : Drawable(), Animatable {
 
         private var mLastUpdateTime: Long = 0
@@ -174,8 +177,8 @@ class ProgressView : View {
                     return mStrokeColors!![mStrokeColorIndex]
 
                 val value = Math.max(
-                    0f,
-                    Math.min(1f, (SystemClock.uptimeMillis() - mLastProgressStateTime).toFloat() / mKeepDuration)
+                        0f,
+                        Math.min(1f, (SystemClock.uptimeMillis() - mLastProgressStateTime).toFloat() / mKeepDuration)
                 )
                 val prev_index = if (mStrokeColorIndex == 0) mStrokeColors!!.size - 1 else mStrokeColorIndex - 1
 
@@ -209,8 +212,8 @@ class ProgressView : View {
                 val time = (SystemClock.uptimeMillis() - mLastRunStateTime).toFloat() / mInAnimationDuration
                 val steps = time / stepTime
 
-                var outerRadius = 0f
-                var innerRadius = 0f
+                var outerRadius = 0F
+                var innerRadius: Float
 
                 for (i in Math.floor(steps.toDouble()).toInt() downTo 0) {
                     innerRadius = outerRadius
@@ -253,14 +256,14 @@ class ProgressView : View {
                 }
             } else if (mRunState == RUN_STATE_STOPPING) {
                 val size = mStrokeSize.toFloat() * Math.max(
-                    0,
-                    mOutAnimationDuration - SystemClock.uptimeMillis() + mLastRunStateTime
+                        0,
+                        mOutAnimationDuration - SystemClock.uptimeMillis() + mLastRunStateTime
                 ) / mOutAnimationDuration
 
                 if (size > 0) {
                     val bounds = bounds
                     val radius =
-                        (Math.min(bounds.width(), bounds.height()) - mPadding * 2 - mStrokeSize * 2 + size) / 2f
+                            (Math.min(bounds.width(), bounds.height()) - mPadding * 2 - mStrokeSize * 2 + size) / 2f
                     val x = (bounds.left + bounds.right) / 2f
                     val y = (bounds.top + bounds.bottom) / 2f
 
@@ -447,7 +450,7 @@ class ProgressView : View {
                     val minAngle = if (mReverse) -mMinSweepAngle else mMinSweepAngle
 
                     val newSweepAngle =
-                        (1f - mTransformInterpolator.getInterpolation(value)) * (maxAngle - minAngle) + minAngle
+                            (1f - mTransformInterpolator.getInterpolation(value)) * (maxAngle - minAngle) + minAngle
                     mStartAngle += rotateOffset + mSweepAngle - newSweepAngle
                     mSweepAngle = newSweepAngle
 
@@ -511,10 +514,10 @@ class ProgressView : View {
 
             init {
                 val a = context.obtainStyledAttributes(
-                    attrs,
-                    R.styleable.CircularProgressDrawable,
-                    defStyleAttr,
-                    defStyleRes
+                        attrs,
+                        R.styleable.CircularProgressDrawable,
+                        defStyleAttr,
+                        defStyleRes
                 )
                 var resId: Int
 
@@ -523,16 +526,16 @@ class ProgressView : View {
                 maxSweepAngle(a.getInteger(R.styleable.CircularProgressDrawable_cpd_maxSweepAngle, 270).toFloat())
                 minSweepAngle(a.getInteger(R.styleable.CircularProgressDrawable_cpd_minSweepAngle, 1).toFloat())
                 strokeSize(
-                    a.getDimensionPixelSize(
-                        R.styleable.CircularProgressDrawable_cpd_strokeSize,
-                        ThemeUtil.dpToPx(context, 4)
-                    )
+                        a.getDimensionPixelSize(
+                                R.styleable.CircularProgressDrawable_cpd_strokeSize,
+                                ThemeUtil.dpToPx(context, 4)
+                        )
                 )
                 strokeColors(
-                    a.getColor(
-                        R.styleable.CircularProgressDrawable_cpd_strokeColor,
-                        ThemeUtil.colorPrimary(context, -0x1000000)
-                    )
+                        a.getColor(
+                                R.styleable.CircularProgressDrawable_cpd_strokeColor,
+                                ThemeUtil.colorPrimary(context, -0x1000000)
+                        )
                 )
                 resId = a.getResourceId(R.styleable.CircularProgressDrawable_cpd_strokeColors, 0);
                 if (resId != 0) {
@@ -545,40 +548,40 @@ class ProgressView : View {
                 }
                 reverse(a.getBoolean(R.styleable.CircularProgressDrawable_cpd_reverse, false))
                 rotateDuration(
-                    a.getInteger(
-                        R.styleable.CircularProgressDrawable_cpd_rotateDuration,
-                        context.resources.getInteger(android.R.integer.config_longAnimTime)
-                    )
+                        a.getInteger(
+                                R.styleable.CircularProgressDrawable_cpd_rotateDuration,
+                                context.resources.getInteger(android.R.integer.config_longAnimTime)
+                        )
                 )
                 transformDuration(
-                    a.getInteger(
-                        R.styleable.CircularProgressDrawable_cpd_transformDuration,
-                        context.resources.getInteger(android.R.integer.config_mediumAnimTime)
-                    )
+                        a.getInteger(
+                                R.styleable.CircularProgressDrawable_cpd_transformDuration,
+                                context.resources.getInteger(android.R.integer.config_mediumAnimTime)
+                        )
                 )
                 keepDuration(
-                    a.getInteger(
-                        R.styleable.CircularProgressDrawable_cpd_keepDuration,
-                        context.resources.getInteger(android.R.integer.config_shortAnimTime)
-                    )
+                        a.getInteger(
+                                R.styleable.CircularProgressDrawable_cpd_keepDuration,
+                                context.resources.getInteger(android.R.integer.config_shortAnimTime)
+                        )
                 )
                 resId = a.getResourceId(R.styleable.CircularProgressDrawable_cpd_transformInterpolator, 0)
-                if (resId!= 0)
+                if (resId != 0)
                     transformInterpolator(AnimationUtils.loadInterpolator(context, resId))
                 progressMode(
-                    a.getInteger(
-                        R.styleable.CircularProgressDrawable_pv_progressMode,
-                        ProgressView.MODE_INDETERMINATE
-                    )
+                        a.getInteger(
+                                R.styleable.CircularProgressDrawable_pv_progressMode,
+                                ProgressView.MODE_INDETERMINATE
+                        )
                 )
                 inAnimDuration(
-                    a.getInteger(
-                        R.styleable.CircularProgressDrawable_cpd_inAnimDuration,
-                        context.resources.getInteger(android.R.integer.config_mediumAnimTime)
-                    )
+                        a.getInteger(
+                                R.styleable.CircularProgressDrawable_cpd_inAnimDuration,
+                                context.resources.getInteger(android.R.integer.config_mediumAnimTime)
+                        )
                 )
                 resId = a.getResourceId(R.styleable.CircularProgressDrawable_cpd_inStepColors, 0)
-                if (resId!= 0) {
+                if (resId != 0) {
                     val ta = context.resources.obtainTypedArray(resId)
                     val colors = IntArray(ta.length())
                     for (j in 0 until ta.length())
@@ -588,10 +591,10 @@ class ProgressView : View {
                 }
                 inStepPercent(a.getFloat(R.styleable.CircularProgressDrawable_cpd_inStepPercent, 0.5f))
                 outAnimDuration(
-                    a.getInteger(
-                        R.styleable.CircularProgressDrawable_cpd_outAnimDuration,
-                        context.resources.getInteger(android.R.integer.config_mediumAnimTime)
-                    )
+                        a.getInteger(
+                                R.styleable.CircularProgressDrawable_cpd_outAnimDuration,
+                                context.resources.getInteger(android.R.integer.config_mediumAnimTime)
+                        )
                 )
                 a.recycle()
             }
@@ -607,22 +610,22 @@ class ProgressView : View {
                     mTransformInterpolator = DecelerateInterpolator()
 
                 return CircularProgressDrawable(
-                    mPadding,
-                    mInitialAngle,
-                    mMaxSweepAngle,
-                    mMinSweepAngle,
-                    mStrokeSize,
-                    mStrokeColors,
-                    mReverse,
-                    mRotateDuration,
-                    mTransformDuration,
-                    mKeepDuration,
-                    mTransformInterpolator!!,
-                    mProgressMode,
-                    mInAnimationDuration,
-                    mInStepPercent,
-                    mInColors!!,
-                    mOutAnimationDuration
+                        mPadding,
+                        mInitialAngle,
+                        mMaxSweepAngle,
+                        mMinSweepAngle,
+                        mStrokeSize,
+                        mStrokeColors,
+                        mReverse,
+                        mRotateDuration,
+                        mTransformDuration,
+                        mKeepDuration,
+                        mTransformInterpolator!!,
+                        mProgressMode,
+                        mInAnimationDuration,
+                        mInStepPercent,
+                        mInColors!!,
+                        mOutAnimationDuration
                 )
             }
 
@@ -729,10 +732,13 @@ class ProgressView : View {
         val FRAME_DURATION = (1000 / 60).toLong()
 
         fun setBackground(v: View, drawable: Drawable) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 v.background = drawable
-            else
-                v.setBackgroundDrawable(drawable)
+            } else {
+                //  v.setBackgroundDrawable(drawable)
+                v.backgroundDrawable = drawable
+            }
+
         }
 
     }
@@ -767,13 +773,14 @@ class ProgressView : View {
 
         fun dpToPx(context: Context, dp: Int): Int {
             return (TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp.toFloat(),
-                context.resources.displayMetrics
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    dp.toFloat(),
+                    context.resources.displayMetrics
             ) + 0.5f).toInt()
         }
 
 
+        @SuppressLint("NewApi")
         private fun getColor(context: Context, id: Int, defaultValue: Int): Int {
             if (value == null)
                 value = TypedValue()
@@ -781,12 +788,16 @@ class ProgressView : View {
             try {
                 val theme = context.theme
                 if (theme != null && theme.resolveAttribute(id, value, true)) {
-                    if (value!!.type >= TypedValue.TYPE_FIRST_INT && value!!.type <= TypedValue.TYPE_LAST_INT)
+                    if (value!!.type >= TypedValue.TYPE_FIRST_INT && value!!.type <= TypedValue.TYPE_LAST_INT) {
                         return value!!.data
-                    else if (value!!.type == TypedValue.TYPE_STRING)
-                        return context.resources.getColor(value!!.resourceId)
+                    } else if (value!!.type == TypedValue.TYPE_STRING) {
+                        return context.getColor(value!!.resourceId)
+                        // return context.resources.getColor(value!!.resourceId)
+                    }
                 }
             } catch (ex: Exception) {
+                ex.printStackTrace()
+                LogUtils.d("ProgressView",ex.localizedMessage)
 
             }
 
@@ -796,9 +807,9 @@ class ProgressView : View {
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         fun colorPrimary(context: Context, defaultValue: Int): Int {
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) getColor(
-                context,
-                android.R.attr.colorPrimary,
-                defaultValue
+                    context,
+                    android.R.attr.colorPrimary,
+                    defaultValue
             ) else getColor(context, R.attr.colorPrimary, defaultValue)
 
         }

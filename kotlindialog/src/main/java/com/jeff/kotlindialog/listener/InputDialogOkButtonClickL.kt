@@ -1,6 +1,6 @@
 package com.jeff.kotlindialogs.listener
 
-import android.support.v7.app.AlertDialog
+import android.app.Dialog
 
 /**
  * author : Jeff  5899859876@qq.com
@@ -8,6 +8,6 @@ import android.support.v7.app.AlertDialog
  * Created :  2018-11-17.
  * description ：
  */
-interface OnBackPressListener {
-    abstract fun OnBackPress(alertDialog: AlertDialog)
+interface InputDialogOkButtonClickL {
+    abstract  fun onClick(dialog: Dialog, inputText: String)
 }

@@ -44,19 +44,17 @@ class NotNullSingleValueVar<T> : ReadWriteProperty<Any?, T> {
  * 访问Shared Preferences
  * **/
 class Preference<T>(val context: Context, val name: String, val default: T) : ReadWriteProperty<Any?, T> {
-
     val ref: SharedPreferences by lazy { context.getSharedPreferences("News", Context.MODE_PRIVATE) }
-
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        return findPreferenceByName(name, default)
-    }
-
+        return findPreferenceByName(name, default) }
     override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         putPreference(name, value)
     }
-
+     // https://www.cnblogs.com/nexiyi/p/how_to_avoid_unchecked_cast.html
+    // 在这里会产生 Unchecked cast: Any! to T
+    @SuppressWarnings("unchecked")
     private fun findPreferenceByName(name: String, default: T): T = with(ref) {
-        val res: Any = when (default) {
+        val res:Any?= when (default) {
             is Int -> getInt(name, default)
             is Boolean -> getBoolean(name, default)
             is String -> getString(name, default)
@@ -64,9 +62,8 @@ class Preference<T>(val context: Context, val name: String, val default: T) : Re
             is Float -> getFloat(name, default)
             else -> throw IllegalArgumentException("this type not support")
         }
-        return res as T
+        return res!! as T
     }
-
     private fun putPreference(name: String, value: T) = with(ref.edit()) {
         when (value) {
             is Int -> putInt(name, value)

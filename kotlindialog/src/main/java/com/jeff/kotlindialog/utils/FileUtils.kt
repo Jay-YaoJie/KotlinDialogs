@@ -143,7 +143,7 @@ object FileUtils {
     }
 
     private fun File.checkFile(): Boolean {
-        return this == null || !this.exists() || !this.isDirectory
+        return  !this.exists() || !this.isDirectory
     }
 
     /**
@@ -252,7 +252,7 @@ object FileUtils {
         //获得当前时间
         val current = System.currentTimeMillis();
         val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date(current));
-        var filePath: File? = null;
+        var filePath: File? ;
         when (formatNmae) {
             "mp4", "h264", "3gp" -> {//保存为视频文件
                 filePath = File("${DialogSettings.ROOT_DIR}/${DialogSettings.APP_NAME}/videos/${time}.${formatNmae}");

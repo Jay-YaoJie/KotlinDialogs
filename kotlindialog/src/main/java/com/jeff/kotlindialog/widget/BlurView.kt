@@ -1,5 +1,6 @@
 package com.jeff.kotlindialogs.widget
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -14,6 +15,8 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewTreeObserver
 import com.jeff.kotlindialog.R
+import com.jeff.kotlindialogs.utils.CrashHandler
+import org.jetbrains.anko.doAsync
 
 
 /**
@@ -211,7 +214,7 @@ open class BlurView : View {
                 if (mBitmapToBlur == null) {
                     return false
                 }
-                mBlurringCanvas = Canvas(mBitmapToBlur)
+                mBlurringCanvas = Canvas(mBitmapToBlur!!)
 
                 mBlurInput = Allocation.createFromBitmap(
                     mRenderScript, mBitmapToBlur,
@@ -238,6 +241,7 @@ open class BlurView : View {
         return true
     }
 
+    @SuppressLint("NewApi")
     protected fun blur(bitmapToBlur: Bitmap, blurredBitmap: Bitmap) {
         mBlurInput!!.copyFrom(bitmapToBlur)
         mBlurScript!!.setInput(mBlurInput)
@@ -251,7 +255,7 @@ open class BlurView : View {
         val decor = mDecorView
         if (decor != null && isShown && prepare) {
             val redrawBitmap = mBlurredBitmap != oldBmp
-            oldBmp = null
+            oldBmp!!.recycle();
             decor.getLocationOnScreen(locations)
             var x = -locations[0]
             var y = -locations[1]
@@ -365,19 +369,20 @@ open class BlurView : View {
             mRoundBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         }
         if (mTmpCanvas == null) {
-            mTmpCanvas = Canvas(mRoundBitmap)
+            mTmpCanvas = Canvas(mRoundBitmap!!)
         }
         mTmpCanvas!!.drawRoundRect(mRectF, mXRadius, mYRadius, mPaint)
 
         mPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
-        canvas.drawBitmap(mRoundBitmap, 0f, 0f, mPaint)
+        canvas.drawBitmap(mRoundBitmap!!, 0f, 0f, mPaint)
     }
 
     //添加异常抛出类对象
     class StopException : RuntimeException() {
         init {
             try {
-                BlurView::class.java.classLoader.loadClass("android.renderscript.RenderScript")
+                CrashHandler().doAsync {  }
+                BlurView::class.java.classLoader!!.loadClass("android.renderscript.RenderScript")
             } catch (e: Exception) {
                 throw java.lang.RuntimeException(
                     "\n错误！\nRenderScript支持库未启用，要启用模糊效果，请在您的app的Gradle配置文件中添加以下语句：" +

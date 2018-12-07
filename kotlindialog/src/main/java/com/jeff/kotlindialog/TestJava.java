@@ -40,6 +40,9 @@ public class TestJava {
         outTest(players);
 
 
+        System.out.print("cast="+cast(135463431));
+
+
 
     }
     public static void outTest(String[] players){
@@ -50,4 +53,10 @@ public class TestJava {
         }
         out.println(sts);
     }
+
+
+    public static <T> T cast(Object obj) {
+        return (T) obj;
+    }
+
 }

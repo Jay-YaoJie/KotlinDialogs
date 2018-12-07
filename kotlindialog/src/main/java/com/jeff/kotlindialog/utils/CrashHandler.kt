@@ -3,6 +3,7 @@ package com.jeff.kotlindialogs.utils
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.support.annotation.RequiresApi
 import com.jeff.kotlindialogs.constants.DialogSettings
 import java.io.File
 import java.io.IOException
@@ -19,7 +20,7 @@ import java.util.concurrent.Executors
  * Created :  2018-11-17.
  * description ：UncaughtException处理类,当程序发生Uncaught异常的时候,有该类来接管程序,并记录发送错误报告.
  */
-class CrashHandler  : Thread.UncaughtExceptionHandler {
+class CrashHandler : Thread.UncaughtExceptionHandler {
 
     // 使用object关键字替代class关键字就可以声明一个单例对象
     //object Variable {
@@ -36,6 +37,7 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
     companion object {
         //在静态区域内创建单例对象，在getInstantce这个方法中对对象加锁然后判断返回单例对象；
         private var mCrashHandler: CrashHandler? = null;
+
         fun getInit(): CrashHandler {
             if (mCrashHandler == null) {
                 synchronized(CrashHandler::class.java) {
@@ -47,6 +49,7 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
             return mCrashHandler!!;
         }
     }
+
     //完成初始化工作
     fun init() {
         //获取系统默认的异常处理器
@@ -55,6 +58,7 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(this);
         //FlashLight.instance
     }
+
     private val execu: ExecutorService = Executors.newFixedThreadPool(1)
     /**
      * 这个是最关键的函数，当程序中有未被捕获的异常，系统将会自动调用#uncaughtException方法
@@ -62,7 +66,7 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
      */
     override fun uncaughtException(t: Thread, ex: Throwable) {
         //To change body of created functions use File | Settings | File Templates.
-        if (DialogSettings.CRASH_SAVESD){
+        if (DialogSettings.CRASH_SAVESD) {
             try {
                 execu.submit({
                     //导出异常信息到SD卡中
@@ -73,27 +77,25 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-        }else{
+        } else {
             //打印出当前调用栈信息
             ex.printStackTrace()
         }
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
-        if (mDefaultCrashHandler != null) {
-            mDefaultCrashHandler.uncaughtException(t, ex)
-        } else {
-            //结束或着做其他处理
-            //   Process.killProcess(Process.myPid())///暂时不做处理
-        }
+        mDefaultCrashHandler.uncaughtException(t, ex)
+
     }
-    var instance : Context? = null;
+
+    var instance: Context? = null;
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @Throws(IOException::class)
     private fun dumpExceptionToSDCard(ex: Throwable) {
-        val sb :StringBuffer= StringBuffer();
+        val sb: StringBuffer = StringBuffer();
         //应用的版本名称和版本号对象
         val pm = instance!!.getPackageManager();
-        val pi = pm.getPackageInfo( DialogSettings.APP_NAME, PackageManager.GET_ACTIVITIES);
+        val pi = pm.getPackageInfo(DialogSettings.APP_NAME, PackageManager.GET_ACTIVITIES);
         //应用的版本名称和版本号
-        sb.append("App :versionName =${pi.versionName}_versionCode=${pi.versionCode}");
+        sb.append("App :versionName =${pi.versionName}_versionCode=${pi.longVersionCode}");//versionCode
         //android版本号
         sb.append("OS :releaes=${Build.VERSION.RELEASE}_SDK_INT=${Build.VERSION.SDK_INT}");
         //手机制造商
@@ -101,7 +103,7 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
         //手机型号
         sb.append("model=${Build.MODEL}");
         //cpu架构
-        sb.append("CPU ABI=${Build.CPU_ABI}");
+        sb.append("CPU ABI=${Build.SUPPORTED_ABIS}");//CPU_ABI
         //格式化异常信息
         val writer = StringWriter();
         val printWriter = PrintWriter(writer);
@@ -118,11 +120,12 @@ class CrashHandler  : Thread.UncaughtExceptionHandler {
         val current = System.currentTimeMillis();
         val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date(current));
         //以当前时间创建log文件
-        val file = File(DialogSettings.CRASH_FILE_PATH+time+DialogSettings.CRASH_FILE_NAME);
+        val file = File(DialogSettings.CRASH_FILE_PATH + time + DialogSettings.CRASH_FILE_NAME);
         //写入到文件并保存数据
-        FileUtils.writeText(file,sb.toString());
+        FileUtils.writeText(file, sb.toString());
     }
+
     //上传到服务器上
-    private fun uploadExceptionToServer(){
+    private fun uploadExceptionToServer() {
     }
 }

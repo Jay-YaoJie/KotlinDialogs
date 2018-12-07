@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
 import android.view.ViewGroup
-import android.view.WindowManager
 import com.jeff.kotlindialogs.utils.unitWH
 
 /**
