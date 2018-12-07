@@ -27,7 +27,7 @@ import java.util.*
         //保存实例化对象，以便后面使用
         lateinit var dialogValue: BaseDialog;
 
-        var dialogList: List<BaseDialog> = ArrayList()         //对话框队列
+        var dialogList: List<BaseDialog> = ArrayList()       //对话框队列
         fun unloadAllDialog() {
             try {
                 for (baseDialog in dialogList) {
@@ -108,7 +108,7 @@ import java.util.*
     internal var cCustomView: RelativeLayout? = null
 
     internal open fun doShowDialog() {
-        mLog(valueListStr.toString())
+        mLog("doShowDialog()="+valueListStr.toString())
 
     }
 

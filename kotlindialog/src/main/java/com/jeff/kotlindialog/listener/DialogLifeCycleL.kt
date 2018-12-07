@@ -9,7 +9,7 @@ import android.app.Dialog
  * description ： 使用监听器来监听对话框的生命周期
  */
 interface DialogLifeCycleL {
-    abstract  fun onCreate(alertDialog: Dialog)
+    //abstract  fun onCreate(alertDialog: Dialog)
     abstract  fun onShow(alertDialog: Dialog)
     abstract  fun onDismiss()
 }

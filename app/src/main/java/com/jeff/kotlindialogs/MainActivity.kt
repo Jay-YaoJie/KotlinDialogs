@@ -8,7 +8,7 @@ import android.widget.Toast
 import com.jeff.kotlindialogs.bottom.BottomMenu
 import com.jeff.kotlindialogs.listener.DialogLifeCycleL
 import com.jeff.kotlindialogs.listener.OnMenuItemClickL
-import org.jetbrains.anko.sdk27.coroutines.onClick
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var activity: AppCompatActivity
@@ -29,19 +29,16 @@ class MainActivity : AppCompatActivity() {
     //此处使用的是来自com.jeff.kotlindialogs.bottom 的 BottomMenu 类。
     open fun bottom(v: View) {
 
-        BottomMenu.show(activity, list, object : OnMenuItemClickL {
-            override fun onClick(text: String, index: Int) {
-                Toast.makeText(activity, "菜单 " + text + " 被点击了", Toast.LENGTH_LONG).show();
-
-
-            }
-        })!!.setTitle("这里是标题测试")//.setCustomView(customView)
-
-
+//        BottomMenu.show(activity, list, object : OnMenuItemClickL {
+//            override fun onClick(text: String, index: Int) {
+//                Toast.makeText(activity, "菜单 " + text + " 被点击了", Toast.LENGTH_LONG).show();
+//
+//
+//            }
+//        })!!.setTitle("这里是标题测试")//.setCustomView(customView)
         bottomL();
+
     }
-
-
 
     fun bottomL(){
         BottomMenu.show(activity, list, object : OnMenuItemClickL {
@@ -49,10 +46,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(activity, "菜单 " + text + " 被点击了", Toast.LENGTH_LONG).show();
             }
         },object : DialogLifeCycleL{
-            override fun onCreate(alertDialog: Dialog) {
-
-                Toast.makeText(activity, "创建好了", Toast.LENGTH_LONG).show();
-            }
 
             override fun onShow(alertDialog: Dialog) {
                 Toast.makeText(activity, "弹出了", Toast.LENGTH_LONG).show();
