@@ -4,7 +4,7 @@ apply plugin: 'com.android.library'
    followed by the com.android.application plugin:  */
 apply plugin: 'kotlin-android'
 //kotlin的apt 类似于java的apt
-apply plugin: 'kotlin-kapt'
+//apply plugin: 'kotlin-kapt'
 //扩展插件，使用可以直接引用布局里view的id进行操作
 apply plugin: 'kotlin-android-extensions'
 
