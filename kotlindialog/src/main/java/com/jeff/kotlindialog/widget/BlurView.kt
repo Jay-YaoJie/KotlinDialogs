@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.widget
+package com.jeff.kotlindialog.widget
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -15,7 +15,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewTreeObserver
 import com.jeff.kotlindialog.R
-import com.jeff.kotlindialogs.utils.CrashHandler
+import com.jeff.kotlindialog.utils.CrashHandler
 import org.jetbrains.anko.doAsync
 
 
@@ -158,6 +158,7 @@ open class BlurView : View {
     }
 
     protected var prepare: Boolean = false
+        @SuppressLint("NewApi")
         get() {
         if (mBlurRadius == 0f) {
             release()

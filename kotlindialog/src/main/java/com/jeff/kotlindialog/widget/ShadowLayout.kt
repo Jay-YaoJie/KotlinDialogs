@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.widget
+package com.jeff.kotlindialog.widget
 
 import android.annotation.SuppressLint
 import android.content.Context

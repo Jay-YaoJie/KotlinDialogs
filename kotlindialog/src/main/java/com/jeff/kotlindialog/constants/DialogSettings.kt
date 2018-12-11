@@ -1,7 +1,7 @@
-package com.jeff.kotlindialogs.constants
+package com.jeff.kotlindialog.constants
 
 import android.view.textservice.TextInfo
-import com.jeff.kotlindialogs.info.TInfo
+import com.jeff.kotlindialog.info.TInfo
 
 /**
  * author : Jeff  5899859876@qq.com

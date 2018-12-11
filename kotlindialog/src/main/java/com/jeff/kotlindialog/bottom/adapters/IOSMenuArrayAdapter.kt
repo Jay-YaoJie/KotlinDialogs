@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.bottom.adapters
+package com.jeff.kotlindialog.bottom.adapters
 
 import android.content.Context
 import android.util.TypedValue
@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jeff.kotlindialog.R
-import com.jeff.kotlindialogs.info.TInfo
-import java.util.*
+import com.jeff.kotlindialog.info.TInfo
+
 
 
 /**

@@ -1,18 +1,19 @@
-package com.jeff.kotlindialogs.constants
+package com.jeff.kotlindialog.constants
 
 import android.content.Context
 import android.support.v7.app.AlertDialog
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.jeff.kotlindialogs.constants.DialogSettings.LOG_DEBUG
-import com.jeff.kotlindialogs.info.TInfo
-import com.jeff.kotlindialogs.listener.DialogLifeCycleL
+import com.jeff.kotlindialog.constants.DialogSettings.LOG_DEBUG
+import com.jeff.kotlindialog.info.TInfo
+import com.jeff.kotlindialog.listener.DialogLifeCycleL
 
-import com.jeff.kotlindialogs.utils.LogUtils
-import com.jeff.kotlindialogs.widget.BlurView
+import com.jeff.kotlindialog.utils.LogUtils
+import com.jeff.kotlindialog.widget.BlurView
 import java.util.*
 
 /**
@@ -21,7 +22,7 @@ import java.util.*
  * Created :  2018-11-17.
  * description ：baseDialog 全局Dialog   抽象类对象
  */
- abstract class BaseDialog {
+abstract class BaseDialog {
 
     companion object {
         //保存实例化对象，以便后面使用
@@ -41,11 +42,12 @@ import java.util.*
         }
     }
 
-
-    internal var isDialogShown: Boolean=false
+    //setCancelable()使用
+    internal var isCanCancel = false
+    internal var isDialogShown: Boolean = false
 
     //使用监听器来监听对话框的生命周期
-    internal  var dialogLifeCycleL: DialogLifeCycleL?=null
+    internal var dialogLifeCycleL: DialogLifeCycleL? = null
 
     //在这里设置对话打印日志
 
@@ -56,7 +58,7 @@ import java.util.*
     }
 
     //弹出对话框对象
-    internal var mAlertDialog: AlertDialog?=null
+    internal var mAlertDialog: AlertDialog? = null
     lateinit var mBilder: AlertDialog.Builder
     /* WindowManager windowManager = activity.getWindowManager();
             Display display = windowManager.getDefaultDisplay();
@@ -75,18 +77,18 @@ import java.util.*
     internal var cancelButton = "取消"//取消按钮
 
     //决定对话框按钮文字样式
-    internal var dialogButtonTextInfo: TInfo= TInfo()
+    internal var dialogButtonTextInfo: TInfo = TInfo()
     //决定菜单文字样式
-    internal var menuTextInfo: TInfo=TInfo()
+    internal var menuTextInfo: TInfo = TInfo()
 
     //决定提示框文本样式
-    internal  var tipTextInfo: TInfo = TInfo()
+    internal var tipTextInfo: TInfo = TInfo()
 
     //决定对话框内容文字样式
-    internal var dialogContentTextInfo: TInfo= TInfo()
+    internal var dialogContentTextInfo: TInfo = TInfo()
 
 
-
+    internal var rootView: View? = null
     lateinit var blur: BlurView
     lateinit var blurList: BlurView
     lateinit var viewGroup: ViewGroup
@@ -108,12 +110,12 @@ import java.util.*
     internal var cCustomView: RelativeLayout? = null
 
     internal open fun doShowDialog() {
-        mLog("doShowDialog()="+valueListStr.toString())
+        mLog("doShowDialog()=" + valueListStr.toString())
 
     }
 
     internal fun doDismiss() {
-            mAlertDialog!!.dismiss()
+        mAlertDialog!!.dismiss()
     }
 
 

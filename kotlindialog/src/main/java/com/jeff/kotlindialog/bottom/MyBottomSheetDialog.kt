@@ -1,10 +1,10 @@
-package com.jeff.kotlindialogs.bottom
+package com.jeff.kotlindialog.bottom
 
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
 import android.view.ViewGroup
-import com.jeff.kotlindialogs.utils.unitWH
+import com.jeff.kotlindialog.utils.unitWH
 
 /**
  * author : Jeff  5899859876@qq.com

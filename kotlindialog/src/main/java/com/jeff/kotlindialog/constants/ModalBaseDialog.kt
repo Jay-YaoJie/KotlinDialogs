@@ -1,6 +1,6 @@
-package com.jeff.kotlindialogs.constants
+package com.jeff.kotlindialog.constants
 
-import com.jeff.kotlindialogs.utils.LogUtils
+import com.jeff.kotlindialog.utils.LogUtils
 import java.util.*
 
 /**
@@ -10,9 +10,10 @@ import java.util.*
  * description ：
  */
 abstract class ModalBaseDialog: BaseDialog() {
-    protected var modalDialogList: List<BaseDialog> = ArrayList()         //对话框模态化队列
+    protected var modalDialogList: List<BaseDialog> = ArrayList()
 
-    protected fun showNextModalDialog() {
+    //对话框模态化队列
+    internal fun showNextModalDialog() {
         LogUtils.i("ModalBaseDialog", "showNextModalDialog: " + modalDialogList.size)
         modalDialogList[0].doShowDialog()
     }

@@ -5,8 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical">
-
-    <com.kongzue.dialog.util.ShadowLayout
+<com.jeff.kotlindialog.widget.ShadowLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:sl_shadow_angle="90"
@@ -88,6 +87,6 @@
 
         </LinearLayout>
 
-    </com.kongzue.dialog.util.ShadowLayout>
+</com.jeff.kotlindialog.widget.ShadowLayout>
 
 </LinearLayout>

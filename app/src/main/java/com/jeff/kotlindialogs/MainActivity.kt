@@ -1,13 +1,13 @@
 package com.jeff.kotlindialogs
 
 import android.app.Dialog
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
-import com.jeff.kotlindialogs.bottom.BottomMenu
-import com.jeff.kotlindialogs.listener.DialogLifeCycleL
-import com.jeff.kotlindialogs.listener.OnMenuItemClickL
+import com.jeff.kotlindialog.bottom.BottomMenu
+import com.jeff.kotlindialog.listener.DialogLifeCycleL
+import com.jeff.kotlindialog.listener.OnMenuItemClickL
 
 
 class MainActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.info
+package com.jeff.kotlindialog.info
 
 import android.text.InputType
 

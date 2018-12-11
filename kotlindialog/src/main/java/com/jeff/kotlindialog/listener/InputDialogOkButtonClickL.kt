@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.listener
+package com.jeff.kotlindialog.listener
 
 import android.app.Dialog
 

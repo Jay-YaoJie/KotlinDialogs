@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.utils
+package com.jeff.kotlindialog.utils
 
 import android.content.Context
 import android.content.SharedPreferences

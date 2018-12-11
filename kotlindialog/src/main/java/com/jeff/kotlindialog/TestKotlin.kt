@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs
+package com.jeff.kotlindialog
 
 import com.google.gson.Gson
 import java.util.*

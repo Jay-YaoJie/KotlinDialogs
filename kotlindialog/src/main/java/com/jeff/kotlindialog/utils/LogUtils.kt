@@ -1,7 +1,7 @@
-package com.jeff.kotlindialogs.utils
+package com.jeff.kotlindialog.utils
 
 import android.util.Log
-import com.jeff.kotlindialogs.constants.DialogSettings
+import com.jeff.kotlindialog.constants.DialogSettings
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -10,13 +10,15 @@ import java.util.concurrent.Executors
 
 /**
  * author : Jeff  5899859876@qq.com
+ * Csdn :https://blog.csdn.net/Jeff_YaoJie
  * Github: https://github.com/Jay-YaoJie
  * Created :  2018-11-17.
  * description ：日志工具类
  */
+
 object  LogUtils {
     private val execu: ExecutorService = Executors.newFixedThreadPool(1)
-    private val tag:String="com.jeff.kotlindialogs.utils.LogUtils"
+    private val tag:String="com.jeff.kotlindialog.utils.LogUtils"
 
     fun v(tag: String, msg: String) = DialogSettings.LOG_DEBUG.debugLog(tag, "${tag}==---==${msg}", Log.VERBOSE)
     fun d(tag: String, msg: String) = DialogSettings.LOG_DEBUG.debugLog(tag, "${tag}==---==${msg}", Log.DEBUG)

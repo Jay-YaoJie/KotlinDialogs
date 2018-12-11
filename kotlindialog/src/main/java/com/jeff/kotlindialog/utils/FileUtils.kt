@@ -1,7 +1,7 @@
-package com.jeff.kotlindialogs.utils
+package com.jeff.kotlindialog.utils
 
 import android.os.Environment
-import com.jeff.kotlindialogs.constants.DialogSettings
+import com.jeff.kotlindialog.constants.DialogSettings
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream

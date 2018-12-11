@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.info
+package com.jeff.kotlindialog.info
 
 /**
  * author : Jeff  5899859876@qq.com

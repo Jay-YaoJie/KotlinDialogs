@@ -1,10 +1,11 @@
-package com.jeff.kotlindialogs.utils
+package com.jeff.kotlindialog.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.annotation.RequiresApi
-import com.jeff.kotlindialogs.constants.DialogSettings
+import com.jeff.kotlindialog.constants.DialogSettings
 import java.io.File
 import java.io.IOException
 import java.io.PrintWriter
@@ -64,6 +65,7 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
      * 这个是最关键的函数，当程序中有未被捕获的异常，系统将会自动调用#uncaughtException方法
      * thread为出现未捕获异常的线程，ex为未捕获的异常，有了这个ex，我们就可以得到异常信息。
      */
+    @SuppressLint("NewApi")
     override fun uncaughtException(t: Thread, ex: Throwable) {
         //To change body of created functions use File | Settings | File Templates.
         if (DialogSettings.CRASH_SAVESD) {
@@ -87,7 +89,7 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
     }
 
     var instance: Context? = null;
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("NewApi")
     @Throws(IOException::class)
     private fun dumpExceptionToSDCard(ex: Throwable) {
         val sb: StringBuffer = StringBuffer();

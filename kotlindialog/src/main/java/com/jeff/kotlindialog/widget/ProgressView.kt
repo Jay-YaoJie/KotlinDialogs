@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.widget
+package com.jeff.kotlindialog.widget
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
@@ -15,7 +15,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
 import com.jeff.kotlindialog.R
-import com.jeff.kotlindialogs.utils.LogUtils
+import com.jeff.kotlindialog.utils.LogUtils
 import org.jetbrains.anko.backgroundDrawable
 
 

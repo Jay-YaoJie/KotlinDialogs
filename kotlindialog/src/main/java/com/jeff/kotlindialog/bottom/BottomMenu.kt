@@ -1,4 +1,4 @@
-package com.jeff.kotlindialogs.bottom
+package com.jeff.kotlindialog.bottom
 
 import android.content.Context
 import android.graphics.Color
@@ -10,19 +10,19 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.RelativeLayout
 import com.jeff.kotlindialog.R
-import com.jeff.kotlindialogs.bottom.adapters.IOSMenuArrayAdapter
-import com.jeff.kotlindialogs.bottom.adapters.NormalMenuArrayAdapter
-import com.jeff.kotlindialogs.constants.BaseDialog
-import com.jeff.kotlindialogs.constants.DialogSettings.TYPE_IOS
-import com.jeff.kotlindialogs.constants.DialogSettings.TYPE_KONGZUE
-import com.jeff.kotlindialogs.constants.DialogSettings.TYPE_MATERIAL
-import com.jeff.kotlindialogs.constants.DialogSettings.blur_alpha
-import com.jeff.kotlindialogs.constants.DialogSettings.type
-import com.jeff.kotlindialogs.constants.DialogSettings.use_blur
-import com.jeff.kotlindialogs.listener.DialogLifeCycleL
-import com.jeff.kotlindialogs.listener.OnMenuItemClickL
-import com.jeff.kotlindialogs.utils.unitWH
-import com.jeff.kotlindialogs.widget.BlurView
+import com.jeff.kotlindialog.bottom.adapters.IOSMenuArrayAdapter
+import com.jeff.kotlindialog.bottom.adapters.NormalMenuArrayAdapter
+import com.jeff.kotlindialog.constants.BaseDialog
+import com.jeff.kotlindialog.constants.DialogSettings.TYPE_IOS
+import com.jeff.kotlindialog.constants.DialogSettings.TYPE_KONGZUE
+import com.jeff.kotlindialog.constants.DialogSettings.TYPE_MATERIAL
+import com.jeff.kotlindialog.constants.DialogSettings.blur_alpha
+import com.jeff.kotlindialog.constants.DialogSettings.type
+import com.jeff.kotlindialog.constants.DialogSettings.use_blur
+import com.jeff.kotlindialog.listener.DialogLifeCycleL
+import com.jeff.kotlindialog.listener.OnMenuItemClickL
+import com.jeff.kotlindialog.utils.unitWH
+import com.jeff.kotlindialog.widget.BlurView
 import org.jetbrains.anko.backgroundResource
 import org.jetbrains.anko.find
 import org.jetbrains.anko.sdk27.coroutines.onClick
@@ -115,6 +115,7 @@ class BottomMenu : BaseDialog() {
     //弹出对话框
     override fun doShowDialog() {
         super.doShowDialog()
+        isCanCancel=true
         //https://blog.csdn.net/Jeff_YaoJie/article/details/84847262
         dialogList += dialogValue
         if (type == TYPE_MATERIAL) {
@@ -157,8 +158,8 @@ class BottomMenu : BaseDialog() {
 
             bottomSheetDialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             bottomSheetDialog.setContentView(box_view)
-            bottomSheetDialog.setCancelable(true)
-            bottomSheetDialog.setCanceledOnTouchOutside(true)
+            bottomSheetDialog.setCancelable(isCanCancel)
+            bottomSheetDialog.setCanceledOnTouchOutside(isCanCancel)
             bottomSheetDialog.setOnDismissListener {
                 dialogList -= (dialogValue as BottomMenu)
                 cCustomView!!.removeAllViews()
@@ -176,13 +177,13 @@ class BottomMenu : BaseDialog() {
 
         } else {
             mBilder = AlertDialog.Builder(mContext, R.style.bottom_menu)
-            mBilder.setCancelable(true)
+            mBilder.setCancelable(isCanCancel)
             mAlertDialog = mBilder.create()
             if (mAlertDialog == null) {
                 mLog("当前 AlertDialog 对象为空")
                 return;
             }
-            mAlertDialog!!.setCanceledOnTouchOutside(true)
+            mAlertDialog!!.setCanceledOnTouchOutside(isCanCancel)
             // dialogLifeCycleL!!.onCreate(mAlertDialog!!)
             mAlertDialog!!.setOnDismissListener {
                 //https://blog.csdn.net/Jeff_YaoJie/article/details/84847262
