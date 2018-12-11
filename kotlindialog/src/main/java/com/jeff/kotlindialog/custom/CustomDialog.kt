@@ -22,14 +22,14 @@ class CustomDialog : ModalBaseDialog() {
     var bindView: BindView? = null
 
     companion object {
-
+        //  View customView = LayoutInflater.from(context).inflate(layoutResId, null);
         fun show(context: Context, rootView: View): CustomDialog {
             build(context, rootView, null).doShowDialog()
             return dialogValue as CustomDialog
         }
 
 
-
+        //  View customView = LayoutInflater.from(context).inflate(layoutResId, null);
         fun show(context: Context, rootView: View, bindView: BindView): CustomDialog {
             build(context, rootView, bindView).doShowDialog()
             return dialogValue as CustomDialog
