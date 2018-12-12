@@ -5,6 +5,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.jeff.kotlindialog.R
 import com.jeff.kotlindialog.info.TInfo
 
@@ -26,7 +27,7 @@ class IOSMenuArrayAdapter(context: Context, resource: Int, list: List<String>,cu
         if (view == null) {
             holder= ViewHolder()
             view=  LayoutInflater.from(context).inflate(resource,null)
-            holder.textView=view.findViewById(R.id.text)
+            holder.textView=view.findViewById(R.id.text) as TextView
 
         }
         val textStr=list[position]

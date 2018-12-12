@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.annotation.RequiresApi
+import com.android.internal.R.attr.versionCode
 import com.jeff.kotlindialog.constants.DialogSettings
 import java.io.File
 import java.io.IOException
@@ -92,12 +93,12 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
     @SuppressLint("NewApi")
     @Throws(IOException::class)
     private fun dumpExceptionToSDCard(ex: Throwable) {
-        val sb: StringBuffer = StringBuffer();
+        val sb = StringBuffer();
         //应用的版本名称和版本号对象
         val pm = instance!!.getPackageManager();
         val pi = pm.getPackageInfo(DialogSettings.APP_NAME, PackageManager.GET_ACTIVITIES);
         //应用的版本名称和版本号
-        sb.append("App :versionName =${pi.versionName}_versionCode=${pi.longVersionCode}");//versionCode
+        sb.append("App :versionName =${pi.versionName}_versionCode= ${ versionCode}");//versionCode   pi.longVersionCode
         //android版本号
         sb.append("OS :releaes=${Build.VERSION.RELEASE}_SDK_INT=${Build.VERSION.SDK_INT}");
         //手机制造商

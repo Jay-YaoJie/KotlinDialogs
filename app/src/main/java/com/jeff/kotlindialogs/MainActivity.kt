@@ -3,6 +3,7 @@ package com.jeff.kotlindialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -16,7 +17,7 @@ import org.jetbrains.anko.find
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
     lateinit var activity: AppCompatActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +31,10 @@ class MainActivity : AppCompatActivity() {
     }
     //底部弹出菜单
     var list: List<String> = ArrayList()
-
     lateinit var customView: View
     //此处使用的是来自com.jeff.kotlindialogs.bottom 的 BottomMenu 类。
     open fun botn(v: View) {
+        Log.d("main","你点击了当前id"+v.id)
 
         //bottomL(); //底部弹出view
 

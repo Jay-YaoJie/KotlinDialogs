@@ -50,7 +50,7 @@ open class NormalMenuArrayAdapter(context: Context, resource: Int, list: List<St
         if (view == null) {
             holder = ViewHolder()
             view = LayoutInflater.from(context).inflate(resource, null)
-            holder.textView = view.findViewById(R.id.text)
+            holder.textView = view.findViewById(R.id.text) as TextView
             view.tag = holder;
         } else {
             holder = view.tag as ViewHolder;

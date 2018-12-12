@@ -7,7 +7,6 @@ import com.jeff.kotlindialog.R
 import com.jeff.kotlindialog.constants.ModalBaseDialog
 import com.jeff.kotlindialog.listener.BindView
 
-
 /**
  * author : Jeff  5899859876@qq.com
  * CSDN ： https://blog.csdn.net/Jeff_YaoJie
@@ -75,7 +74,10 @@ class CustomDialog : ModalBaseDialog() {
             }
         }
         mWindow = mAlertDialog!!.window!!
+
         mAlertDialog!!.show();
+
+
 
         if (dialogLifeCycleL != null) {
             //添加监听

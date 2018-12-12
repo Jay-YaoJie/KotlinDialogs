@@ -6,9 +6,7 @@ import android.support.v7.app.AlertDialog
 import android.util.Half.toFloat
 import android.util.TypedValue
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.ListView
-import android.widget.RelativeLayout
+import android.widget.*
 import com.jeff.kotlindialog.R
 import com.jeff.kotlindialog.bottom.adapters.IOSMenuArrayAdapter
 import com.jeff.kotlindialog.bottom.adapters.NormalMenuArrayAdapter
@@ -215,11 +213,11 @@ class BottomMenu : BaseDialog() {
                 }
             }
             mWindow.setContentView(resId)
-            listMenu = mWindow.findViewById(R.id.list_menu)
-            btnCancel = mWindow.findViewById(R.id.btn_cancel)
-            txtTitle = mWindow.findViewById(R.id.title)
-            imgTitle = mWindow.findViewById(R.id.title_split_line)
-            cCustomView = mWindow.findViewById(R.id.box_custom)
+            listMenu = mWindow.findViewById(R.id.list_menu) as  ListView
+            btnCancel = mWindow.findViewById(R.id.btn_cancel) as TextView
+            txtTitle = mWindow.findViewById(R.id.title) as  TextView
+            imgTitle = mWindow.findViewById(R.id.title_split_line) as  ImageView
+            cCustomView = mWindow.findViewById(R.id.box_custom) as RelativeLayout
             if (title.isNullOrEmpty()) {
                 txtTitle.visibility = View.GONE
                 imgTitle.visibility = View.GONE
@@ -244,7 +242,7 @@ class BottomMenu : BaseDialog() {
                     viewGroup = mWindow.findViewById(R.id.box_cancel) as LinearLayout
                 }
                 TYPE_IOS -> {
-                    mCustomView = mWindow.findViewById(R.id.box_list)
+                    mCustomView = mWindow.findViewById(R.id.box_list) as RelativeLayout
                     viewGroup = mWindow.findViewById(R.id.box_cancel) as RelativeLayout
                     if (use_blur) {
                         //决定等待框、提示框以及iOS风格的对话框是否启用模糊背景
