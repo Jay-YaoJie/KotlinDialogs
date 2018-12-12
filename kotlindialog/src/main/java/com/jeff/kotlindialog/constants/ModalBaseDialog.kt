@@ -15,6 +15,9 @@ abstract class ModalBaseDialog: BaseDialog() {
     //对话框模态化队列
     internal fun showNextModalDialog() {
         LogUtils.i("ModalBaseDialog", "showNextModalDialog: " + modalDialogList.size)
-        modalDialogList[0].doShowDialog()
+        if ( modalDialogList.size>0){
+            modalDialogList[0].doShowDialog()
+        }
+
     }
 }

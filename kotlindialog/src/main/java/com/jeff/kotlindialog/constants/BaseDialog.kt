@@ -71,7 +71,7 @@ abstract class BaseDialog {
     lateinit var mContext: Context//当前上下文对象
 
     //保存信息对象，对话框弹出的值  val mList: List<Int> = listOf(1, 3, 5, 7, 9)
-    lateinit var valueListStr: List<String>
+    internal var valueListStr: List<String> =ArrayList()
 
     internal var title: String? = null//标题
     internal var cancelButton = "取消"//取消按钮
@@ -110,11 +110,17 @@ abstract class BaseDialog {
     internal var cCustomView: RelativeLayout? = null
 
     internal open fun doShowDialog() {
-        mLog("doShowDialog()=" + valueListStr.toString())
+        //lateinit property valueListStr has not been initialized
+        if (!valueListStr.isEmpty()){
+            mLog("doShowDialog()=" + valueListStr.toString())
+        }else{
+            mLog("doShowDialog()=加载自定义view" )
+        }
+
 
     }
 
-    internal fun doDismiss() {
+    fun doDismiss() {
         mAlertDialog!!.dismiss()
     }
 
