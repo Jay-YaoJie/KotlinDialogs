@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.support.annotation.RequiresApi
-import com.android.internal.R.attr.versionCode
 import com.jeff.kotlindialog.constants.DialogSettings
 import java.io.File
 import java.io.IOException
@@ -21,6 +19,10 @@ import java.util.concurrent.Executors
  * Github: https://github.com/Jay-YaoJie
  * Created :  2018-11-17.
  * description ：UncaughtException处理类,当程序发生Uncaught异常的时候,有该类来接管程序,并记录发送错误报告.
+ *
+ * https://github.com/Jay-YaoJie/NettyAndroid-kotlin/blob/master/Flashlight/app/src/main/java/com/ftrd/flashlight/FlashLight.kt
+ * https://github.com/Jay-YaoJie/NettyAndroid-kotlin/blob/master/Flashlight/app/src/main/java/com/ftrd/flashlight/util/CrashHandler.kt
+ * https://blog.csdn.net/owenchan1987/article/details/73008548
  */
 class CrashHandler : Thread.UncaughtExceptionHandler {
 
@@ -98,7 +100,7 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
         val pm = instance!!.getPackageManager();
         val pi = pm.getPackageInfo(DialogSettings.APP_NAME, PackageManager.GET_ACTIVITIES);
         //应用的版本名称和版本号
-        sb.append("App :versionName =${pi.versionName}_versionCode= ${ versionCode}");//versionCode   pi.longVersionCode
+        sb.append("App :versionName =${pi.versionName}_versionCode= ${  pi.longVersionCode}");//versionCode   pi.longVersionCode
         //android版本号
         sb.append("OS :releaes=${Build.VERSION.RELEASE}_SDK_INT=${Build.VERSION.SDK_INT}");
         //手机制造商
