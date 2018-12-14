@@ -8,6 +8,7 @@ import com.jeff.kotlindialog.utils.unitWH
 
 /**
  * author : Jeff  5899859876@qq.com
+ * Csdn :https://blog.csdn.net/Jeff_YaoJie
  * Github: https://github.com/Jay-YaoJie
  * Created :  2018-12-04.
  * description ： Android 6.0新控件 BottomSheetDialog | 底部对话框 介绍及使用详情

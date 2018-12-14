@@ -17,6 +17,13 @@ import org.jetbrains.anko.find
 import org.jetbrains.anko.sdk27.coroutines.onClick
 
 
+/**
+ * author : Jeff  5899859876@qq.com
+ * Csdn :https://blog.csdn.net/Jeff_YaoJie
+ * Github: https://github.com/Jay-YaoJie
+ * Created :  2018-12-13.
+ * description ：测试main
+ */
 open class MainActivity : AppCompatActivity() {
     lateinit var activity: AppCompatActivity
     override fun onCreate(savedInstanceState: Bundle?) {

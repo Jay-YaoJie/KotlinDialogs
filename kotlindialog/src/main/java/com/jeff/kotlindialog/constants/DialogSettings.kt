@@ -5,6 +5,7 @@ import com.jeff.kotlindialog.info.TInfo
 
 /**
  * author : Jeff  5899859876@qq.com
+ * Csdn :https://blog.csdn.net/Jeff_YaoJie
  * Github: https://github.com/Jay-YaoJie
  * Created :  2018-11-17.
  * description ：  全局属性   var是一个可变变量，val是一个只读变量相当于java中的final变量。

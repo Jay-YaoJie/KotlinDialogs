@@ -4,6 +4,7 @@ import android.content.Context
 
 /**
  * author : Jeff  5899859876@qq.com
+ * Csdn :https://blog.csdn.net/Jeff_YaoJie
  * Github: https://github.com/Jay-YaoJie
  * Created :  2018-12-04.
  * description ：dip值到pix值转换：dip2pix，dip2px，dp2px实

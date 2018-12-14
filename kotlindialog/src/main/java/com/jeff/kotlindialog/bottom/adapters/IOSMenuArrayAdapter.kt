@@ -13,6 +13,7 @@ import com.jeff.kotlindialog.info.TInfo
 
 /**
  * author : Jeff  5899859876@qq.com
+ * Csdn :https://blog.csdn.net/Jeff_YaoJie
  * Github: https://github.com/Jay-YaoJie
  * Created :  2018-12-04.
  * description ： 底部菜单iOS风格

@@ -7,6 +7,7 @@ import kotlin.reflect.KProperty
 
 /**
  * author : Jeff  5899859876@qq.com
+ * Csdn :https://blog.csdn.net/Jeff_YaoJie
  * Github: https://github.com/Jay-YaoJie
  * Created :  2018-11-17.
  * description ：自定义委托对象by Delegates.notNull()
