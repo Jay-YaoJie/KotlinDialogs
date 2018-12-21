@@ -41,12 +41,12 @@ object DialogSettings {
     var ROOT_DIR: String = "";//在Application初始化中赋值，其他地方直接调用即可
 
     //CRASH保存的异常文件目录和文件名称
-    var CRASH_FILE_PATH: String? = "${ROOT_DIR}/${DialogSettings.APP_NAME}/crash/";//保存文件地址，有可能为空
+    var CRASH_FILE_PATH: String? = "${ROOT_DIR}/${APP_NAME}/crash/";//保存文件地址，有可能为空
     var CRASH_FILE_NAME: String = ".crash";//保存的异常文件名为.crash
     var CRASH_SAVESD: Boolean = true;//true打打印到机器则为调试，false则保存到本地
 
     //LOG保存平常打印的信息文件地址和文件名称
-    var LOG_FILE_PATH: String? = "${ROOT_DIR}/${DialogSettings.APP_NAME}/log/";//保存文件地址，有可能为空
+    var LOG_FILE_PATH: String? = "${ROOT_DIR}/${APP_NAME}/log/";//保存文件地址，有可能为空
     var LOG_FILE_NAME: String = ".log";//保存的异常文件名为.log
     var LOG_SAVESD: Boolean = false;//是否保存到文件//是否存log到sd卡
     var LOG_DEBUG: Boolean = true;//保存是否开启打印模式//是否打印log
